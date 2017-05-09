@@ -1,0 +1,282 @@
+<Links>
+	<Link>
+		<From>New York City, NY</From>
+		<To>Boston, MA</To>
+		<Distance>215</Distance>
+	</Link>
+	<Link>
+		<From>Boston, MA</From>
+		<To>New York City, NY</To>
+		<Distance>215</Distance>
+	</Link>
+	<Link>
+		<From>Detroit, MI</From>
+		<To>Chicago, IL</To>
+		<Distance>282</Distance>
+	</Link>
+	<Link>
+		<From>Chicago, IL</From>
+		<To>Detroit, MI</To>
+		<Distance>282</Distance>
+	</Link>
+	<Link>
+		<From>St. Louis, MO</From>
+		<To>Chicago, IL</To>
+		<Distance>297</Distance>
+	</Link>
+	<Link>
+		<From>Chicago, IL</From>
+		<To>St. Louis, MO</To>
+		<Distance>297</Distance>
+	</Link>
+	<Link>
+		<From>Nashville, TN</From>
+		<To>St. Louis, MO</To>
+		<Distance>309</Distance>
+	</Link>
+	<Link>
+		<From>St. Louis, MO</From>
+		<To>Nashville, TN</To>
+		<Distance>309</Distance>
+	</Link>
+	<Link>
+		<From>Norfolk, VA</From>
+		<To>New York City, NY</To>
+		<Distance>363</Distance>
+	</Link>
+	<Link>
+		<From>New York City, NY</From>
+		<To>Norfolk, VA</To>
+		<Distance>363</Distance>
+	</Link>
+	<Link>
+		<From>Phoenix, AZ</From>
+		<To>Los Angeles, CA</To>
+		<Distance>372</Distance>
+	</Link>
+	<Link>
+		<From>Los Angeles, CA</From>
+		<To>Phoenix, AZ</To>
+		<Distance>372</Distance>
+	</Link>
+	<Link>
+		<From>Los Angeles, CA</From>
+		<To>San Francisco, CA</To>
+		<Distance>382</Distance>
+	</Link>
+	<Link>
+		<From>San Francisco, CA</From>
+		<To>Los Angeles, CA</To>
+		<Distance>382</Distance>
+	</Link>
+	<Link>
+		<From>Denver, CO</From>
+		<To>Santa Fe, NM</To>
+		<Distance>392</Distance>
+	</Link>
+	<Link>
+		<From>Santa Fe, NM</From>
+		<To>Denver, CO</To>
+		<Distance>392</Distance>
+	</Link>
+	<Link>
+		<From>Atlanta, GA</From>
+		<To>New Orleans, LA</To>
+		<Distance>469</Distance>
+	</Link>
+	<Link>
+		<From>New Orleans, LA</From>
+		<To>Atlanta, GA</To>
+		<Distance>469</Distance>
+	</Link>
+	<Link>
+		<From>Santa Fe, NM</From>
+		<To>Phoenix, AZ</To>
+		<Distance>480</Distance>
+	</Link>
+	<Link>
+		<From>Phoenix, AZ</From>
+		<To>Santa Fe, NM</To>
+		<Distance>480</Distance>
+	</Link>
+	<Link>
+		<From>New Orleans, LA</From>
+		<To>Austin, TX</To>
+		<Distance>512</Distance>
+	</Link>
+	<Link>
+		<From>Austin, TX</From>
+		<To>New Orleans, LA</To>
+		<Distance>512</Distance>
+	</Link>
+	<Link>
+		<From>New Orleans, LA</From>
+		<To>Nashville, TN</To>
+		<Distance>532</Distance>
+	</Link>
+	<Link>
+		<From>Nashville, TN</From>
+		<To>New Orleans, LA</To>
+		<Distance>532</Distance>
+	</Link>
+	<Link>
+		<From>Atlanta, GA</From>
+		<To>Norfolk, VA</To>
+		<Distance>566</Distance>
+	</Link>
+	<Link>
+		<From>Norfolk, VA</From>
+		<To>Atlanta, GA</To>
+		<Distance>566</Distance>
+	</Link>
+	<Link>
+		<From>Detroit, MI</From>
+		<To>New York City, NY</To>
+		<Distance>614</Distance>
+	</Link>
+	<Link>
+		<From>New York City, NY</From>
+		<To>Detroit, MI</To>
+		<Distance>614</Distance>
+	</Link>
+	<Link>
+		<From>Chicago, IL</From>
+		<To>Fargo, ND</To>
+		<Distance>643</Distance>
+	</Link>
+	<Link>
+		<From>Fargo, ND</From>
+		<To>Chicago, IL</To>
+		<Distance>643</Distance>
+	</Link>
+	<Link>
+		<From>Atlanta, GA</From>
+		<To>Miami, FL</To>
+		<Distance>663</Distance>
+	</Link>
+	<Link>
+		<From>Miami, FL</From>
+		<To>Atlanta, GA</To>
+		<Distance>663</Distance>
+	</Link>
+	<Link>
+		<From>Austin, TX</From>
+		<To>Santa Fe, NM</To>
+		<Distance>688</Distance>
+	</Link>
+	<Link>
+		<From>Santa Fe, NM</From>
+		<To>Austin, TX</To>
+		<Distance>688</Distance>
+	</Link>
+	<Link>
+		<From>Norfolk, VA</From>
+		<To>Nashville, TN</To>
+		<Distance>706</Distance>
+	</Link>
+	<Link>
+		<From>Nashville, TN</From>
+		<To>Norfolk, VA</To>
+		<Distance>706</Distance>
+	</Link>
+	<Link>
+		<From>Boston, MA</From>
+		<To>Detroit, MI</To>
+		<Distance>719</Distance>
+	</Link>
+	<Link>
+		<From>Detroit, MI</From>
+		<To>Boston, MA</To>
+		<Distance>719</Distance>
+	</Link>
+	<Link>
+		<From>Chicago, IL</From>
+		<To>New York City, NY</To>
+		<Distance>790</Distance>
+	</Link>
+	<Link>
+		<From>New York City, NY</From>
+		<To>Chicago, IL</To>
+		<Distance>790</Distance>
+	</Link>
+	<Link>
+		<From>San Francisco, CA</From>
+		<To>Seattle, WA</To>
+		<Distance>808</Distance>
+	</Link>
+	<Link>
+		<From>Seattle, WA</From>
+		<To>San Francisco, CA</To>
+		<Distance>808</Distance>
+	</Link>
+	<Link>
+		<From>Austin, TX</From>
+		<To>St. Louis, MO</To>
+		<Distance>825</Distance>
+	</Link>
+	<Link>
+		<From>St. Louis, MO</From>
+		<To>Austin, TX</To>
+		<Distance>825</Distance>
+	</Link>
+	<Link>
+		<From>Denver, CO</From>
+		<To>St. Louis, MO</To>
+		<Distance>851</Distance>
+	</Link>
+	<Link>
+		<From>St. Louis, MO</From>
+		<To>Denver, CO</To>
+		<Distance>851</Distance>
+	</Link>
+	<Link>
+		<From>New Orleans, LA</From>
+		<To>Miami, FL</To>
+		<Distance>864</Distance>
+	</Link>
+	<Link>
+		<From>Miami, FL</From>
+		<To>New Orleans, LA</To>
+		<Distance>864</Distance>
+	</Link>
+	<Link>
+		<From>Fargo, ND</From>
+		<To>Denver, CO</To>
+		<Distance>889</Distance>
+	</Link>
+	<Link>
+		<From>Denver, CO</From>
+		<To>Fargo, ND</To>
+		<Distance>889</Distance>
+	</Link>
+	<Link>
+		<From>Santa Fe, NM</From>
+		<To>St. Louis, MO</To>
+		<Distance>1032</Distance>
+	</Link>
+	<Link>
+		<From>St. Louis, MO</From>
+		<To>Santa Fe, NM</To>
+		<Distance>1032</Distance>
+	</Link>
+	<Link>
+		<From>Denver, CO</From>
+		<To>San Francisco, CA</To>
+		<Distance>1249</Distance>
+	</Link>
+	<Link>
+		<From>San Francisco, CA</From>
+		<To>Denver, CO</To>
+		<Distance>1249</Distance>
+	</Link>
+	<Link>
+		<From>Seattle, WA</From>
+		<To>Fargo, ND</To>
+		<Distance>1426</Distance>
+	</Link>
+	<Link>
+		<From>Fargo, ND</From>
+		<To>Seattle, WA</To>
+		<Distance>1426</Distance>
+	</Link>
+</Links>
