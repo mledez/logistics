@@ -3,6 +3,7 @@ package logistics;
 import java.util.ArrayList;
 
 import logistics.exceptions.InitializationException;
+import logistics.exceptions.InvalidDataException;
 import logistics.exceptions.XmlDataException;
 import logistics.facility.FacilityManager;
 import logistics.item.ItemManager;
@@ -15,14 +16,6 @@ public class Main {
 		ItemManager im = ItemManager.getInstance();
 
 		FacilityManager fm = FacilityManager.getInstance();
-
-		try {
-			nm.init("Links.xml", 8, 50);
-			im.init("Items.xml");
-			fm.init("Facilities.xml");
-		} catch (XmlDataException e) {
-			System.err.println(e.getMessage());
-		}
 
 		ArrayList<String[]> samplePairs = new ArrayList<>();
 		samplePairs.add(new String[] { "Santa Fe, NM", "Chicago, IL" });
@@ -37,12 +30,16 @@ public class Main {
 		samplePairs.add(new String[] { "Detroit, MI", "Nashville, TN" });
 
 		try {
+			nm.init("Links.xml", 8, 50);
+			im.init("Items.xml");
+			fm.init("Facilities.xml");
+
 			System.out.println(outputOne(fm));
 			System.out.println(outputTwo(im));
 			System.out.println(outputThree(nm, samplePairs));
-		} catch (InitializationException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+
+		} catch (XmlDataException | InvalidDataException | InitializationException e) {
+			System.err.println(e.getMessage());
 		}
 	}
 
@@ -52,7 +49,7 @@ public class Main {
 	}
 
 	// Item Catalog Content Output
-	private static String outputTwo(ItemManager im) throws InitializationException {
+	private static String outputTwo(ItemManager im) throws InitializationException, InvalidDataException {
 		return im.getReport();
 	}
 
@@ -62,7 +59,7 @@ public class Main {
 		String report = "Shortest Path Tests:\n\n";
 		for (String[] pair : samplePairs) {
 			report += nm.getPathReport(pair[0], pair[1]).replaceAll("(?m)(^.*\\n)(^.*\\n)+(^.*$)",
-					letter + ") $1 • $2 • $3\n\n");
+					letter + ") $1   •  $2   •  $3\n\n");
 			letter++;
 		}
 		return report;

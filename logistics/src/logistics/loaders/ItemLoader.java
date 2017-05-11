@@ -9,6 +9,7 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
+import logistics.exceptions.InvalidDataException;
 import logistics.exceptions.XmlDataException;
 import logistics.item.Item;
 import logistics.item.ItemFactory;
@@ -17,7 +18,7 @@ public class ItemLoader {
 
 	private ItemLoader() {}
 
-	public static List<Item> load(String fileName) throws XmlDataException {
+	public static List<Item> load(String fileName) throws XmlDataException, InvalidDataException {
 
 		try {
 			Document doc = XmlDocLoader.loadDoc(fileName);
@@ -40,12 +41,7 @@ public class ItemLoader {
 				String id = elem.getElementsByTagName("Id").item(0).getTextContent();
 				int price = Integer.parseInt(elem.getElementsByTagName("Price").item(0).getTextContent());
 
-				Item item = ItemFactory.createItem(id, price);
-				if (item.getStatus())
-					items.add(item);
-				else {
-					System.err.println("[Item not added to the catalog (Illegal values)]\n" + item);
-				}
+				items.add(ItemFactory.createItem(id, price));
 			}
 			return items;
 

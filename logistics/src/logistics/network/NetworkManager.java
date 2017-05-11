@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
+import logistics.exceptions.InitializationException;
 import logistics.exceptions.XmlDataException;
 import logistics.loaders.NetworkLoader;
 import logistics.path.PathProcessor;
@@ -90,19 +91,10 @@ public class NetworkManager {
 		return separator;
 	}
 
-	public Map<String, Float> getNeighbors(String location) {
-		Map<String, Float> neighbors = new TreeMap<>();
-		Float travelTime;
-		for (Link link : getNetwork()) {
-			if (link.getOrigin().equals(location)) {
-				travelTime = (float) link.getDistance() / (getHoursDay() * getMilesHour());
-				neighbors.put(link.getDestination(), travelTime);
-			}
-		}
-		return neighbors;
-	}
+	public String getNeighborsReport(String location) throws InitializationException {
+		if (!getStatus())
+			throw new InitializationException("Network is not initialized");
 
-	public String getNeighborsReport(String location) {
 		Map<String, Float> neighbors = new TreeMap<>();
 		Float travelTime;
 		for (Link link : getNetwork()) {

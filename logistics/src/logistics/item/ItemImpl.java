@@ -1,30 +1,34 @@
 package logistics.item;
 
+import logistics.exceptions.InvalidDataException;
+
 public class ItemImpl implements Item {
 
-	private String id = null;
-	private int price = 0;
+	private String id;
+	private int price;
 
-	@Override
+	private void setId(String id) throws InvalidDataException {
+		if (id == null || id.equals(""))
+			throw new InvalidDataException("Item ID can't be null or empty");
+		this.id = id;
+	}
+
+	private void setPrice(int price) throws InvalidDataException {
+		if (price < 1)
+			throw new InvalidDataException("Item price can't be less than 1");
+		this.price = price;
+	}
+
 	public String getId() {
 		return this.id;
 	}
 
-	public ItemImpl(String id, int price) {
-		this.id = id;
-		this.price = price;
+	public ItemImpl(String id, int price) throws InvalidDataException {
+		setId(id);
+		setPrice(price);
 	}
 
-	@Override
 	public int getPrice() {
 		return this.price;
 	}
-
-	@Override
-	public boolean getStatus() {
-		if (id == null || price < 1)
-			return false;
-		return true;
-	}
-
 }

@@ -3,21 +3,53 @@ package logistics.facility;
 import java.util.Map;
 import java.util.TreeMap;
 
+import logistics.exceptions.InvalidDataException;
+
 public class FacilityImpl implements Facility {
 	private String location;
 	private int dailyRate;
 	private int dailyCost;
 	private Map<String, Integer> inventory;
-	// private Map<String, Float> neighbors;
 	private Map<Integer, Integer> schedule = new TreeMap<>();
 
-	public FacilityImpl(String location, int dailyRate, int dailyCost, Map<String, Integer> inventory) {
-		this.location = location;
-		this.dailyRate = dailyRate;
-		this.dailyCost = dailyCost;
-		this.inventory = inventory;
+	public FacilityImpl(String location, int dailyRate, int dailyCost, Map<String, Integer> inventory)
+			throws InvalidDataException {
+		setLocation(location);
+		setDailyRate(dailyRate);
+		setDailyCost(dailyCost);
+		setInventory(inventory);
+	}
 
-		// this.neighbors = NetworkManager.getInstance().getNeighbors(location);
+	private Map<Integer, Integer> getSchedule() {
+		return schedule;
+	}
+
+	private Map<String, Integer> getInventory() {
+		return inventory;
+	}
+
+	private void setInventory(Map<String, Integer> inventory) throws InvalidDataException {
+		if (inventory == null)
+			throw new InvalidDataException("Facility inventory can not be null");
+		this.inventory = inventory;
+	}
+
+	private void setLocation(String location) throws InvalidDataException {
+		if (location == null || location.equals(""))
+			throw new InvalidDataException("Facility location can not be null or empty");
+		this.location = location;
+	}
+
+	private void setDailyRate(int dailyRate) throws InvalidDataException {
+		if (dailyRate < 1)
+			throw new InvalidDataException("Facility Daily Rate must be 1 or more");
+		this.dailyRate = dailyRate;
+	}
+
+	private void setDailyCost(int dailyCost) throws InvalidDataException {
+		if (dailyCost < 1)
+			throw new InvalidDataException("Facility Daily Cost must be 1 or more");
+		this.dailyCost = dailyCost;
 	}
 
 	public String getLocation() {
@@ -48,11 +80,11 @@ public class FacilityImpl implements Facility {
 	private String getInventoryReport() {
 		String actInventory = "";
 		String depInventory = "";
-		for (String key : inventory.keySet()) {
-			if (inventory.get(key) == 0)
+		for (String key : getInventory().keySet()) {
+			if (getInventory().get(key) == 0)
 				depInventory += key + "; ";
 			else
-				actInventory += String.format("   %-11s %s\n", key, inventory.get(key));
+				actInventory += String.format("   %-11s %s\n", key, getInventory().get(key));
 		}
 		if (depInventory.equals(""))
 			depInventory = "None\n";
@@ -67,38 +99,19 @@ public class FacilityImpl implements Facility {
 		return "Active Inventory: " + actInventory + "\nDepleted (Used-Up) Inventory: " + depInventory;
 	}
 
-	// private String getNeighborsReport() {
-	// String neighborsReport = "";
-	// String currentEntry;
-	// int lineCounter = 0;
-	// for (String neighbor : neighbors.keySet()) {
-	// currentEntry = String.format("%s (%.1fd); ", neighbor, neighbors.get(neighbor));
-	// if ((neighborsReport + currentEntry).length() - lineCounter * 86 <= 86)
-	// neighborsReport = neighborsReport + currentEntry;
-	// else {
-	// neighborsReport = neighborsReport + "\n" + currentEntry;
-	// lineCounter++;
-	// }
-	// }
-	// if (neighborsReport.equals(""))
-	// neighborsReport = "No neighbors found";
-	//
-	// return "Direct Links:\n" + neighborsReport + "\n";
-	// }
-
 	private String getScheduleReport() {
 		String day = "";
 		String available = "";
 
-		int max = schedule.keySet().stream().max(Integer::compareTo).orElse(0);
+		int max = getSchedule().keySet().stream().max(Integer::compareTo).orElse(0);
 
-		if (schedule.isEmpty() || max < 20)
+		if (getSchedule().isEmpty() || max < 20)
 			max = 20;
 
 		for (int i = max - 19; i <= max; i++) {
 			day += String.format("%-2d ", i);
-			if (schedule.containsKey(i))
-				available += String.format("%-2d ", getDailyRate() - schedule.get(i));
+			if (getSchedule().containsKey(i))
+				available += String.format("%-2d ", getDailyRate() - getSchedule().get(i));
 			else
 				available += String.format("%-2d ", getDailyRate());
 		}
@@ -106,9 +119,9 @@ public class FacilityImpl implements Facility {
 		return String.format("Schedule:\n%-15s%s\n%-15s%s\n", "Day:", day, "Available:", available);
 	}
 
-	@Override
-	public boolean getStatus() {
-		// TODO Auto-generated method stub
-		return true;
-	}
+	// @Override
+	// public boolean getStatus() {
+	// // TODO Auto-generated method stub
+	// return true;
+	// }
 }

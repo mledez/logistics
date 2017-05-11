@@ -11,6 +11,7 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
+import logistics.exceptions.InvalidDataException;
 import logistics.exceptions.XmlDataException;
 import logistics.facility.Facility;
 import logistics.facility.FacilityFactory;
@@ -19,7 +20,7 @@ public class FacilityLoader {
 
 	private FacilityLoader() {}
 
-	public static List<Facility> load(String fileName) throws XmlDataException {
+	public static List<Facility> load(String fileName) throws XmlDataException, InvalidDataException {
 
 		try {
 			Document doc = XmlDocLoader.loadDoc(fileName);
@@ -64,13 +65,7 @@ public class FacilityLoader {
 					inventory.put(itemId, itemQty);
 				}
 
-				Facility facility = FacilityFactory.createFacility(location, dailyRate, dailyCost, inventory);
-
-				if (facility.getStatus())
-					facilities.add(facility);
-				else {
-					System.err.println("[Facility not added (Illegal values)]\n" + facility);
-				}
+				facilities.add(FacilityFactory.createFacility(location, dailyRate, dailyCost, inventory));
 			}
 			return facilities;
 
