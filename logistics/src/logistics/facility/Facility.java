@@ -7,7 +7,5 @@ public interface Facility {
 
 	public int getDailyCost();
 
-	// public boolean getStatus();
-
 	public String getReport();
 }
