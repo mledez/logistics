@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
+import logistics.exceptions.XmlDataException;
 import logistics.loaders.NetworkLoader;
 import logistics.path.PathProcessor;
 import logistics.path.PathProcessorFactory;
@@ -17,6 +18,7 @@ public class NetworkManager {
 	private int milesHour = 0;
 	private PathProcessor pathProcessor = null;
 	private String separator = ":::";
+	private boolean status = false;
 
 	private static NetworkManager instance = new NetworkManager();
 
@@ -50,10 +52,15 @@ public class NetworkManager {
 		this.milesHour = milesHour;
 	}
 
-	public void init(int hoursDay, int milesHour) {
-		setNetwork(NetworkLoader.load("Links.xml"));
+	public void init(String fileName, int hoursDay, int milesHour) throws XmlDataException {
+		setNetwork(NetworkLoader.load(fileName));
 		setHoursDay(hoursDay);
 		setMilesHour(milesHour);
+		this.status = true;
+	}
+
+	public boolean getStatus() {
+		return this.status;
 	}
 
 	private PathProcessor getPathProcessor() {
@@ -94,6 +101,33 @@ public class NetworkManager {
 			}
 		}
 		return neighbors;
+	}
+
+	public String getNeighborsReport(String location) {
+		Map<String, Float> neighbors = new TreeMap<>();
+		Float travelTime;
+		for (Link link : getNetwork()) {
+			if (link.getOrigin().equals(location)) {
+				travelTime = (float) link.getDistance() / (getHoursDay() * getMilesHour());
+				neighbors.put(link.getDestination(), travelTime);
+			}
+		}
+		String neighborsReport = "";
+		String currentEntry;
+		int lineCounter = 0;
+		for (String neighbor : neighbors.keySet()) {
+			currentEntry = String.format("%s (%.1fd); ", neighbor, neighbors.get(neighbor));
+			if ((neighborsReport + currentEntry).length() - lineCounter * 86 <= 86)
+				neighborsReport = neighborsReport + currentEntry;
+			else {
+				neighborsReport = neighborsReport + "\n" + currentEntry;
+				lineCounter++;
+			}
+		}
+		if (neighborsReport.equals(""))
+			neighborsReport = "No neighbors found";
+
+		return "Direct Links:\n" + neighborsReport + "\n";
 	}
 
 	public String getPathReport(String origin, String destination) {

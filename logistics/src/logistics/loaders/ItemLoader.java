@@ -9,6 +9,7 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
+import logistics.exceptions.XmlDataException;
 import logistics.item.Item;
 import logistics.item.ItemFactory;
 
@@ -16,7 +17,7 @@ public class ItemLoader {
 
 	private ItemLoader() {}
 
-	public static List<Item> load(String fileName) {
+	public static List<Item> load(String fileName) throws XmlDataException {
 
 		try {
 			Document doc = XmlDocLoader.loadDoc(fileName);

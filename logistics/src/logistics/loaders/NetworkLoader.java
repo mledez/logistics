@@ -9,6 +9,7 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
+import logistics.exceptions.XmlDataException;
 import logistics.network.Link;
 import logistics.network.LinkFactory;
 
@@ -16,7 +17,7 @@ public class NetworkLoader {
 
 	private NetworkLoader() {}
 
-	public static List<Link> load(String fileName) {
+	public static List<Link> load(String fileName) throws XmlDataException {
 
 		try {
 			Document doc = XmlDocLoader.loadDoc(fileName);
@@ -31,8 +32,9 @@ public class NetworkLoader {
 
 				String entryName = nodeList.item(i).getNodeName();
 				if (!entryName.equals("Link")) {
-					System.err.println("Unexpected node found: " + entryName);
-					return null;
+					throw new XmlDataException(
+							String.format("Unexpected node found (%s) in file %s", entryName, fileName));
+					// return null;
 				}
 
 				Element elem = (Element) nodeList.item(i);

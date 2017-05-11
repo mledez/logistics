@@ -3,14 +3,12 @@ package logistics.facility;
 import java.util.Map;
 import java.util.TreeMap;
 
-import logistics.network.NetworkManager;
-
 public class FacilityImpl implements Facility {
 	private String location;
 	private int dailyRate;
 	private int dailyCost;
 	private Map<String, Integer> inventory;
-	private Map<String, Float> neighbors;
+	// private Map<String, Float> neighbors;
 	private Map<Integer, Integer> schedule = new TreeMap<>();
 
 	public FacilityImpl(String location, int dailyRate, int dailyCost, Map<String, Integer> inventory) {
@@ -19,7 +17,7 @@ public class FacilityImpl implements Facility {
 		this.dailyCost = dailyCost;
 		this.inventory = inventory;
 
-		this.neighbors = NetworkManager.getInstance().getNeighbors(location);
+		// this.neighbors = NetworkManager.getInstance().getNeighbors(location);
 	}
 
 	public String getLocation() {
@@ -40,78 +38,69 @@ public class FacilityImpl implements Facility {
 	}
 
 	public String getReport() {
-		String underline = new String(new char[location.length()]).replace("\0", "-");
-		String report = String.format("%s\n" + "%s\n" + "Rate per Day: %s\n" + "Cost per Day: $%s\n" +
-		/*
-		 * "Direct Links:\n" + "***\n\n" +
-		 */
-				"\n%s\n" + "%s" + "%s", location, underline, dailyRate, dailyCost, getNeighborsReport(),
+		String report = "";
+		report = String.format("%s\n%s\nRate per Day: %d\nCost per Day: $%d\n\n%s\n%s", getLocation(),
+				new String(new char[getLocation().length()]).replace("\0", "-"), getDailyRate(), getDailyCost(),
 				getInventoryReport(), getScheduleReport());
 		return report;
 	}
 
-	public void printReport() {
-		System.out.println(getReport());
-	}
-
 	private String getInventoryReport() {
-		String activeInventory = "";
-		String depletedInventory = "";
-		int currentQty;
+		String actInventory = "";
+		String depInventory = "";
 		for (String key : inventory.keySet()) {
-			currentQty = inventory.get(key);
-			if (currentQty == 0)
-				depletedInventory = depletedInventory + key + "; ";
+			if (inventory.get(key) == 0)
+				depInventory += key + "; ";
 			else
-				activeInventory = String.format("%s   %-11s %s\n", activeInventory, key, inventory.get(key));
+				actInventory += String.format("   %-11s %s\n", key, inventory.get(key));
 		}
-		if (depletedInventory.equals(""))
-			depletedInventory = "None\n";
-
-		if (activeInventory.equals(""))
-			activeInventory = "None\n";
+		if (depInventory.equals(""))
+			depInventory = "None\n";
 		else
-			activeInventory = String.format("\n   %-11s%s\n%s", "Item ID", " Quantity", activeInventory);
+			depInventory = depInventory + "\n";
 
-		return "Active Inventory: " + activeInventory + "\nDepleted (Used-Up) Inventory: " + depletedInventory + "\n";
+		if (actInventory.equals(""))
+			actInventory = "None\n";
+		else
+			actInventory = String.format("\n   %-11s%s\n%s", "Item ID", " Quantity", actInventory);
+
+		return "Active Inventory: " + actInventory + "\nDepleted (Used-Up) Inventory: " + depInventory;
 	}
 
-	private String getNeighborsReport() {
-		String neighborsReport = "";
-		String currentEntry;
-		int lineCounter = 0;
-		for (String neighbor : neighbors.keySet()) {
-			currentEntry = String.format("%s (%.1fd); ", neighbor, neighbors.get(neighbor));
-			if ((neighborsReport + currentEntry).length() - lineCounter * 86 <= 86)
-				neighborsReport = neighborsReport + currentEntry;
-			else {
-				neighborsReport = neighborsReport + "\n" + currentEntry;
-				lineCounter++;
-			}
-		}
-		if (neighborsReport.equals(""))
-			neighborsReport = "There are no neighbors";
-
-		return "Direct Links:\n" + neighborsReport + "\n";
-	}
+	// private String getNeighborsReport() {
+	// String neighborsReport = "";
+	// String currentEntry;
+	// int lineCounter = 0;
+	// for (String neighbor : neighbors.keySet()) {
+	// currentEntry = String.format("%s (%.1fd); ", neighbor, neighbors.get(neighbor));
+	// if ((neighborsReport + currentEntry).length() - lineCounter * 86 <= 86)
+	// neighborsReport = neighborsReport + currentEntry;
+	// else {
+	// neighborsReport = neighborsReport + "\n" + currentEntry;
+	// lineCounter++;
+	// }
+	// }
+	// if (neighborsReport.equals(""))
+	// neighborsReport = "No neighbors found";
+	//
+	// return "Direct Links:\n" + neighborsReport + "\n";
+	// }
 
 	private String getScheduleReport() {
 		String day = "";
 		String available = "";
 
-		int max;
+		int max = schedule.keySet().stream().max(Integer::compareTo).orElse(0);
 
-		if (schedule.isEmpty())
+		if (schedule.isEmpty() || max < 20)
 			max = 20;
-		else
-			max = schedule.keySet().stream().max(Integer::compareTo).orElse(0);
 
-		for (int i = 1; i <= max; i++) {
-			day = String.format("%s%-2d ", day, i);
+		for (int i = max - 19; i <= max; i++) {
+			day += String.format("%-2d ", i);
 			if (schedule.containsKey(i))
-				available = String.format("%s%-2d ", available, 10 - schedule.get(i));
+				available += String.format("%-2d ", getDailyRate() - schedule.get(i));
 			else
-				available = String.format("%s%-2d ", available, 10);
+				available += String.format("%-2d ", getDailyRate());
 		}
 
 		return String.format("Schedule:\n%-15s%s\n%-15s%s\n", "Day:", day, "Available:", available);

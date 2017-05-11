@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
+import logistics.exceptions.XmlDataException;
 import logistics.loaders.ItemLoader;
 
 public class ItemManager {
@@ -15,7 +16,7 @@ public class ItemManager {
 
 	private ItemManager() {}
 
-	private List<Item> catalog = ItemLoader.load("Items.xml");
+	private List<Item> catalog;
 	private Map<String, Integer> mappedCatalog = null;
 
 	private Map<String, Integer> getMappedCatalog() {
@@ -27,6 +28,10 @@ public class ItemManager {
 			this.mappedCatalog = mappedCatalog;
 		}
 		return this.mappedCatalog;
+	}
+
+	public void init(String fileName) throws XmlDataException {
+		this.catalog = ItemLoader.load(fileName);
 	}
 
 	public String getReport() {
@@ -49,7 +54,7 @@ public class ItemManager {
 			return report + "\n\n";
 	}
 
-	public void printReport() {
-		System.out.println(getReport());
-	}
+	// public void printReport() {
+	// System.out.println(getReport());
+	// }
 }

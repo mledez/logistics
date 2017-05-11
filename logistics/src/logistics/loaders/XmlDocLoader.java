@@ -11,9 +11,11 @@ import org.w3c.dom.DOMException;
 import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
 
+import logistics.exceptions.XmlDataException;
+
 public class XmlDocLoader {
 
-	public static Document loadDoc(String fileName) throws DOMException {
+	public static Document loadDoc(String fileName) throws DOMException, XmlDataException {
 		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 		DocumentBuilder db = null;
 		Document doc = null;
@@ -30,14 +32,15 @@ public class XmlDocLoader {
 			doc = db.parse(is);
 			doc.getDocumentElement().normalize();
 		} catch (SAXException e) {
-			System.err.println("[File " + fileName + " not properly formatted]");
-			System.exit(-1);
+			throw new XmlDataException("[File " + fileName + " not properly formatted]");
+			// System.err.println("[File " + fileName + " not properly formatted]");
+			// System.exit(-1);
 		} catch (IOException e) {
-			System.err.println("[File " + fileName + " not accessible]");
-			System.exit(-1);
+			// System.err.println("[File " + fileName + " not accessible]");
+			throw new XmlDataException("[File " + fileName + " not accessible]");
 		} catch (IllegalArgumentException e) {
-			System.err.println("[File " + fileName + " not found]");
-			System.exit(-1);
+			// System.err.println("[File " + fileName + " not found]");
+			throw new XmlDataException("[File " + fileName + " not found]");
 		}
 
 		return doc;

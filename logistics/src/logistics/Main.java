@@ -2,6 +2,8 @@ package logistics;
 
 import java.util.ArrayList;
 
+import logistics.exceptions.InitializationException;
+import logistics.exceptions.XmlDataException;
 import logistics.facility.FacilityManager;
 import logistics.item.ItemManager;
 import logistics.network.NetworkManager;
@@ -9,13 +11,19 @@ import logistics.network.NetworkManager;
 public class Main {
 
 	public static void main(String[] args) {
-		long startTime = System.currentTimeMillis();
-
 		NetworkManager nm = NetworkManager.getInstance();
-		nm.init(8, 50);
 		ItemManager im = ItemManager.getInstance();
 
 		FacilityManager fm = FacilityManager.getInstance();
+
+		try {
+			nm.init("Links.xml", 8, 50);
+			im.init("Items.xml");
+
+			fm.init("Facilities.xml");
+		} catch (XmlDataException e) {
+			System.err.println(e.getMessage());
+		}
 
 		ArrayList<String[]> samplePairs = new ArrayList<>();
 		samplePairs.add(new String[] { "Santa Fe, NM", "Chicago, IL" });
@@ -29,23 +37,23 @@ public class Main {
 		samplePairs.add(new String[] { "Los Angeles, CA", "Chicago, IL" });
 		samplePairs.add(new String[] { "Detroit, MI", "Nashville, TN" });
 
-		fm.printReport();
-		im.printReport();
+		try {
+			System.out.println(fm.getReport() + im.getReport() + getBestPathReport(nm, samplePairs));
+		} catch (InitializationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 
+	}
+
+	private static String getBestPathReport(NetworkManager nm, ArrayList<String[]> samplePairs) {
 		char letter = 'a';
 		String report = "";
 		for (String[] pair : samplePairs) {
-			report += formatLinkReport(nm.getPathReport(pair[0], pair[1]), letter) + "\n\n";
+			report += nm.getPathReport(pair[0], pair[1]).replaceAll("(?m)(^.*\\n)(^.*\\n)+(^.*$)",
+					letter + ") $1 • $2 • $3\n\n");
 			letter++;
 		}
-		System.out.println(report);
-
-		long endTime = System.currentTimeMillis();
-		System.out.println("Took " + (endTime - startTime) + " ms");
-	}
-
-	public static String formatLinkReport(String string, char letter) {
-		String report = string.replaceAll("(?m)(^.*\\n)(^.*\\n)+(^.*$)", letter + ") $1 • $2 • $3");
 		return report;
 	}
 }

@@ -13,7 +13,6 @@ public class PathProcessorImpl implements PathProcessor {
 	private String separator = ":::";
 
 	public PathProcessorImpl(Map<String, Integer> network) {
-		setSeparator(separator);
 		setNetwork(network);
 	}
 
@@ -36,10 +35,6 @@ public class PathProcessorImpl implements PathProcessor {
 
 	private String getSeparator() {
 		return separator;
-	}
-
-	private void setSeparator(String separator) {
-		this.separator = separator;
 	}
 
 	public List<String> findBestPath(String start, String end) {
