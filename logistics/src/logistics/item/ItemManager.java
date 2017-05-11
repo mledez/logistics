@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
+import logistics.exceptions.InitializationException;
 import logistics.exceptions.XmlDataException;
 import logistics.loaders.ItemLoader;
 
@@ -18,8 +19,15 @@ public class ItemManager {
 
 	private List<Item> catalog;
 	private Map<String, Integer> mappedCatalog = null;
+	private boolean status = false;
 
-	private Map<String, Integer> getMappedCatalog() {
+	public boolean getStatus() {
+		return this.status;
+	}
+
+	private Map<String, Integer> getMappedCatalog() throws InitializationException {
+		if (!getStatus())
+			throw new InitializationException("Item Manager not initialized");
 		if (this.mappedCatalog == null) {
 			TreeMap<String, Integer> mappedCatalog = new TreeMap<>();
 			for (Item item : this.catalog)
@@ -32,9 +40,12 @@ public class ItemManager {
 
 	public void init(String fileName) throws XmlDataException {
 		this.catalog = ItemLoader.load(fileName);
+		this.status = true;
 	}
 
-	public String getReport() {
+	public String getReport() throws InitializationException {
+		if (!getStatus())
+			throw new InitializationException("Item Manager not initialized");
 		int lineLimit = 86;
 		String report = "   ";
 		String newEntry;
@@ -51,10 +62,7 @@ public class ItemManager {
 		if (report.equals("   "))
 			return "   No items found";
 		else
-			return report + "\n\n";
+			return report + "\n";
 	}
 
-	// public void printReport() {
-	// System.out.println(getReport());
-	// }
 }

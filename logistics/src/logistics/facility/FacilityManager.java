@@ -11,6 +11,7 @@ public class FacilityManager {
 
 	private static FacilityManager ourInstance = new FacilityManager();
 	private List<Facility> facilities;
+	private boolean status = false;
 
 	public static FacilityManager getInstance() {
 		return ourInstance;
@@ -20,6 +21,11 @@ public class FacilityManager {
 
 	public void init(String fileName) throws XmlDataException {
 		this.facilities = FacilityLoader.load(fileName);
+		this.status = true;
+	}
+
+	public boolean getStatus() {
+		return this.status;
 	}
 
 	public String getReport() throws InitializationException {

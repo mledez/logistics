@@ -67,7 +67,6 @@ public class NetworkManager {
 		if (this.pathProcessor == null) {
 			PathProcessor pathProcessor = PathProcessorFactory.createPathProcessor(new HashMap<>(getMappedNetwork()));
 			setPathProcessor(pathProcessor);
-			this.pathProcessor = pathProcessor;
 		}
 		return this.pathProcessor;
 	}
