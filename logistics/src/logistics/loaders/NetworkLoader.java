@@ -40,7 +40,7 @@ public class NetworkLoader {
 				String linkTo = elem.getElementsByTagName("To").item(0).getTextContent();
 				int linkDistance = Integer.parseInt(elem.getElementsByTagName("Distance").item(0).getTextContent());
 
-				Link link = LinkFactory.createLink("Regular", linkFrom, linkTo, linkDistance);
+				Link link = LinkFactory.createLink(linkFrom, linkTo, linkDistance);
 				if (link.getStatus())
 					links.add(link);
 				else {

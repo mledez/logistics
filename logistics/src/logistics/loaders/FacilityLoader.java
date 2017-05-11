@@ -63,8 +63,7 @@ public class FacilityLoader {
 					inventory.put(itemId, itemQty);
 				}
 
-				Facility facility = FacilityFactory.createFacility("Regular", location, dailyRate, dailyCost,
-						inventory);
+				Facility facility = FacilityFactory.createFacility(location, dailyRate, dailyCost, inventory);
 
 				if (facility.getStatus())
 					facilities.add(facility);

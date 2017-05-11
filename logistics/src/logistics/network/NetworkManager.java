@@ -7,6 +7,7 @@ import java.util.TreeMap;
 
 import logistics.loaders.NetworkLoader;
 import logistics.path.PathProcessor;
+import logistics.path.PathProcessorFactory;
 
 public class NetworkManager {
 
@@ -49,12 +50,6 @@ public class NetworkManager {
 		this.milesHour = milesHour;
 	}
 
-	// private boolean getStatus() {
-	// if (getHoursDay() == 0 || getMilesHour() == 0)
-	// return false;
-	// return true;
-	// }
-
 	public void init(int hoursDay, int milesHour) {
 		setNetwork(NetworkLoader.load("Links.xml"));
 		setHoursDay(hoursDay);
@@ -63,7 +58,7 @@ public class NetworkManager {
 
 	private PathProcessor getPathProcessor() {
 		if (this.pathProcessor == null) {
-			PathProcessor pathProcessor = new PathProcessor(new HashMap<>(getMappedNetwork()), getSeparator());
+			PathProcessor pathProcessor = PathProcessorFactory.createPathProcessor(new HashMap<>(getMappedNetwork()));
 			setPathProcessor(pathProcessor);
 			this.pathProcessor = pathProcessor;
 		}

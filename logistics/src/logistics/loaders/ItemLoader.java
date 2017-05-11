@@ -39,7 +39,7 @@ public class ItemLoader {
 				String id = elem.getElementsByTagName("Id").item(0).getTextContent();
 				int price = Integer.parseInt(elem.getElementsByTagName("Price").item(0).getTextContent());
 
-				Item item = ItemFactory.createItem("Regular", id, price);
+				Item item = ItemFactory.createItem(id, price);
 				if (item.getStatus())
 					items.add(item);
 				else {
