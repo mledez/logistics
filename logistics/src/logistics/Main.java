@@ -45,11 +45,7 @@ public class Main {
 	}
 
 	public static String formatLinkReport(String string, char letter) {
-		String[] pieces = string.split("\\n");
-		String report = (pieces[0] + "\n"
-				+ pieces[1].replaceAll("(.{1,87}($|[A-Z]{2} )+)", "$1\n").replaceAll("\\n$", "") + "\n" + pieces[2])
-						.replaceAll("(?m)(^.*\\n)(^.*\\n)(^.*mi\\n)*(^.*$)", letter + ") $1 • $2$3 • $4")
-						.replaceAll("\\n➔", "\n ➔");
+		String report = string.replaceAll("(?m)(^.*\\n)(^.*\\n)+(^.*$)", letter + ") $1 • $2 • $3");
 		return report;
 	}
 }
