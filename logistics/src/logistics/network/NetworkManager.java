@@ -6,7 +6,8 @@ import java.util.Map;
 import java.util.TreeMap;
 
 import logistics.exceptions.InitializationException;
-import logistics.exceptions.XmlDataException;
+import logistics.exceptions.InvalidDataException;
+import logistics.exceptions.XmlReadingException;
 import logistics.loaders.NetworkLoader;
 import logistics.path.PathProcessor;
 import logistics.path.PathProcessorFactory;
@@ -29,7 +30,7 @@ public class NetworkManager {
 
 	private NetworkManager() {}
 
-	private List<Link> getNetwork() {
+	private List<Link> getNetwork() throws InitializationException {
 		return network;
 	}
 
@@ -41,7 +42,9 @@ public class NetworkManager {
 		return hoursDay;
 	}
 
-	private void setHoursDay(int hoursDay) {
+	private void setHoursDay(int hoursDay) throws InvalidDataException {
+		if (hoursDay < 1)
+			throw new InvalidDataException("Hours per hour can't be less than 1");
 		this.hoursDay = hoursDay;
 	}
 
@@ -49,11 +52,14 @@ public class NetworkManager {
 		return milesHour;
 	}
 
-	private void setMilesHour(int milesHour) {
+	private void setMilesHour(int milesHour) throws InvalidDataException {
+		if (milesHour < 1)
+			throw new InvalidDataException("Miles per hour can't be less than 1");
+
 		this.milesHour = milesHour;
 	}
 
-	public void init(String fileName, int hoursDay, int milesHour) throws XmlDataException {
+	public void init(String fileName, int hoursDay, int milesHour) throws XmlReadingException, InvalidDataException {
 		setNetwork(NetworkLoader.load(fileName));
 		setHoursDay(hoursDay);
 		setMilesHour(milesHour);
@@ -64,7 +70,7 @@ public class NetworkManager {
 		return this.status;
 	}
 
-	private PathProcessor getPathProcessor() {
+	private PathProcessor getPathProcessor() throws InitializationException {
 		if (this.pathProcessor == null) {
 			PathProcessor pathProcessor = PathProcessorFactory.createPathProcessor(new HashMap<>(getMappedNetwork()));
 			setPathProcessor(pathProcessor);
@@ -76,7 +82,7 @@ public class NetworkManager {
 		this.pathProcessor = pathProcessor;
 	}
 
-	private Map<String, Integer> getMappedNetwork() {
+	private Map<String, Integer> getMappedNetwork() throws InitializationException {
 		if (this.mappedNetwork == null) {
 			Map<String, Integer> hashMappedNetwork = new HashMap<>();
 			for (Link link : getNetwork()) {
@@ -121,7 +127,10 @@ public class NetworkManager {
 		return "Direct Links:\n" + neighborsReport + "\n";
 	}
 
-	public String getPathReport(String origin, String destination) {
+	public String getPathReport(String origin, String destination) throws InitializationException {
+		if (!getStatus())
+			throw new InitializationException("Network is not initialized");
+
 		List<String> bestPath = getPathProcessor().findBestPath(origin, destination);
 		String firstCity = bestPath.get(0);
 		String secondCity;
@@ -138,7 +147,7 @@ public class NetworkManager {
 				(float) totalDistance / (getHoursDay() * getMilesHour()));
 	}
 
-	private int getDistance(String origin, String destination) {
+	private int getDistance(String origin, String destination) throws InitializationException {
 		return getMappedNetwork().get(origin + getSeparator() + destination);
 	}
 }

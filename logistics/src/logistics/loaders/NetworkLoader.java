@@ -9,7 +9,8 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-import logistics.exceptions.XmlDataException;
+import logistics.exceptions.InvalidDataException;
+import logistics.exceptions.XmlReadingException;
 import logistics.network.Link;
 import logistics.network.LinkFactory;
 
@@ -17,7 +18,7 @@ public class NetworkLoader {
 
 	private NetworkLoader() {}
 
-	public static List<Link> load(String fileName) throws XmlDataException {
+	public static List<Link> load(String fileName) throws XmlReadingException, InvalidDataException {
 
 		try {
 			Document doc = XmlDocLoader.loadDoc(fileName);
@@ -32,9 +33,8 @@ public class NetworkLoader {
 
 				String entryName = nodeList.item(i).getNodeName();
 				if (!entryName.equals("Link")) {
-					throw new XmlDataException(
+					throw new XmlReadingException(
 							String.format("Unexpected node found (%s) in file %s", entryName, fileName));
-					// return null;
 				}
 
 				Element elem = (Element) nodeList.item(i);
@@ -42,19 +42,12 @@ public class NetworkLoader {
 				String linkTo = elem.getElementsByTagName("To").item(0).getTextContent();
 				int linkDistance = Integer.parseInt(elem.getElementsByTagName("Distance").item(0).getTextContent());
 
-				Link link = LinkFactory.createLink(linkFrom, linkTo, linkDistance);
-				if (link.getStatus())
-					links.add(link);
-				else {
-					System.err.println("[Link not added to the network (Illegal values)]\n" + link);
-				}
+				links.add(LinkFactory.createLink(linkFrom, linkTo, linkDistance));
 			}
 			return links;
 
 		} catch (DOMException e) {
-			e.printStackTrace();
+			throw new XmlReadingException("DOM problem found operating file " + fileName);
 		}
-
-		return null;
 	}
 }

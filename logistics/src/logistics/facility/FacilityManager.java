@@ -4,7 +4,7 @@ import java.util.List;
 
 import logistics.exceptions.InitializationException;
 import logistics.exceptions.InvalidDataException;
-import logistics.exceptions.XmlDataException;
+import logistics.exceptions.XmlReadingException;
 import logistics.loaders.FacilityLoader;
 import logistics.network.NetworkManager;
 
@@ -23,6 +23,8 @@ public class FacilityManager {
 	private FacilityManager() {}
 
 	public String getReport() throws InitializationException {
+		if (!getStatus())
+			throw new InitializationException("Facility manager is not initialized");
 		String line = new String(new char[82]).replace("\0", "-") + "\n";
 		String report = line;
 		NetworkManager nm = NetworkManager.getInstance();
@@ -41,13 +43,13 @@ public class FacilityManager {
 		return this.status;
 	}
 
-	public void init(String fileName) throws XmlDataException, InvalidDataException {
+	public void init(String fileName) throws XmlReadingException, InvalidDataException {
 		setFacilities(FacilityLoader.load(fileName));
 		setStatus(true);
 	}
 
 	private List<Facility> getFacilities() {
-		return facilities;
+		return this.facilities;
 	}
 
 	private void setFacilities(List<Facility> facilities) throws InvalidDataException {

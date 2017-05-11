@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 import logistics.exceptions.InitializationException;
 import logistics.exceptions.InvalidDataException;
-import logistics.exceptions.XmlDataException;
+import logistics.exceptions.XmlReadingException;
 import logistics.facility.FacilityManager;
 import logistics.item.ItemManager;
 import logistics.network.NetworkManager;
@@ -38,7 +38,7 @@ public class Main {
 			System.out.println(outputTwo(im));
 			System.out.println(outputThree(nm, samplePairs));
 
-		} catch (XmlDataException | InvalidDataException | InitializationException e) {
+		} catch (XmlReadingException | InvalidDataException | InitializationException e) {
 			System.err.println(e.getMessage());
 		}
 	}
@@ -54,7 +54,8 @@ public class Main {
 	}
 
 	// Example Shortest Path output results
-	private static String outputThree(NetworkManager nm, ArrayList<String[]> samplePairs) {
+	private static String outputThree(NetworkManager nm, ArrayList<String[]> samplePairs)
+			throws InitializationException {
 		char letter = 'a';
 		String report = "Shortest Path Tests:\n\n";
 		for (String[] pair : samplePairs) {

@@ -1,19 +1,20 @@
 package logistics.network;
 
+import logistics.exceptions.InvalidDataException;
+
 public class LinkImpl implements Link {
 
 	private String origin;
 	private String destination;
 	private int distance;
-	private boolean status = true;
 
 	public String getOrigin() {
 		return origin;
 	}
 
-	private void setOrigin(String origin) {
-		if (origin.trim().isEmpty())
-			setStatus(false);
+	private void setOrigin(String origin) throws InvalidDataException {
+		if (origin == null || origin.equals(""))
+			throw new InvalidDataException("Link origin can't be null or empty");
 		this.origin = origin;
 	}
 
@@ -21,32 +22,24 @@ public class LinkImpl implements Link {
 		return destination;
 	}
 
-	private void setDestination(String destination) {
-		if (destination.trim().isEmpty())
-			setStatus(false);
+	private void setDestination(String destination) throws InvalidDataException {
+		if (origin == null || origin.equals(""))
+			throw new InvalidDataException("Link destination can't be null or empty");
 		this.destination = destination;
 	}
 
 	public int getDistance() {
-		return distance;
+		return this.distance;
 	}
 
-	public boolean getStatus() {
-		return status;
-	}
-
-	private void setStatus(boolean status) {
-		this.status = status;
-	}
-
-	private void setDistance(int distance) {
+	private void setDistance(int distance) throws InvalidDataException {
 		if (distance < 1)
-			setStatus(false);
+			throw new InvalidDataException("Distance between locations (links) can't be less than 1");
 		this.distance = distance;
 
 	}
 
-	public LinkImpl(String origin, String destination, int distance) {
+	public LinkImpl(String origin, String destination, int distance) throws InvalidDataException {
 		setOrigin(origin);
 		setDestination(destination);
 		setDistance(distance);

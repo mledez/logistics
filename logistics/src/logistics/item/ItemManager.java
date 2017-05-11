@@ -6,7 +6,7 @@ import java.util.TreeMap;
 
 import logistics.exceptions.InitializationException;
 import logistics.exceptions.InvalidDataException;
-import logistics.exceptions.XmlDataException;
+import logistics.exceptions.XmlReadingException;
 import logistics.loaders.ItemLoader;
 
 public class ItemManager {
@@ -39,7 +39,7 @@ public class ItemManager {
 		return this.mappedCatalog;
 	}
 
-	public void init(String fileName) throws XmlDataException, InvalidDataException {
+	public void init(String fileName) throws XmlReadingException, InvalidDataException {
 		setCatalog(ItemLoader.load(fileName));
 		setStatus(true);
 	}

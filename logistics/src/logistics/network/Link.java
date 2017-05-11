@@ -7,6 +7,4 @@ public interface Link {
 	public String getDestination();
 
 	public int getDistance();
-
-	public boolean getStatus();
 }

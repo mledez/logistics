@@ -10,7 +10,7 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import logistics.exceptions.InvalidDataException;
-import logistics.exceptions.XmlDataException;
+import logistics.exceptions.XmlReadingException;
 import logistics.item.Item;
 import logistics.item.ItemFactory;
 
@@ -18,7 +18,7 @@ public class ItemLoader {
 
 	private ItemLoader() {}
 
-	public static List<Item> load(String fileName) throws XmlDataException, InvalidDataException {
+	public static List<Item> load(String fileName) throws XmlReadingException, InvalidDataException {
 
 		try {
 			Document doc = XmlDocLoader.loadDoc(fileName);

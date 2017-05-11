@@ -11,11 +11,11 @@ import org.w3c.dom.DOMException;
 import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
 
-import logistics.exceptions.XmlDataException;
+import logistics.exceptions.XmlReadingException;
 
 public class XmlDocLoader {
 
-	public static Document loadDoc(String fileName) throws DOMException, XmlDataException {
+	public static Document loadDoc(String fileName) throws DOMException, XmlReadingException {
 		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 		DocumentBuilder db = null;
 		Document doc = null;
@@ -24,23 +24,18 @@ public class XmlDocLoader {
 		try {
 			db = dbf.newDocumentBuilder();
 		} catch (ParserConfigurationException e) {
-			System.err.println("[Parser configuration error found: loading " + fileName + "]");
-			System.exit(-1);
+			throw new XmlReadingException("Parser configuration error found: loading " + fileName);
 		}
 
 		try {
 			doc = db.parse(is);
 			doc.getDocumentElement().normalize();
 		} catch (SAXException e) {
-			throw new XmlDataException("[File " + fileName + " not properly formatted]");
-			// System.err.println("[File " + fileName + " not properly formatted]");
-			// System.exit(-1);
+			throw new XmlReadingException("File " + fileName + " not properly formatted");
 		} catch (IOException e) {
-			// System.err.println("[File " + fileName + " not accessible]");
-			throw new XmlDataException("[File " + fileName + " not accessible]");
+			throw new XmlReadingException("File " + fileName + " not accessible");
 		} catch (IllegalArgumentException e) {
-			// System.err.println("[File " + fileName + " not found]");
-			throw new XmlDataException("[File " + fileName + " not found]");
+			throw new XmlReadingException("File " + fileName + " not found");
 		}
 
 		return doc;
