@@ -86,4 +86,8 @@ public class ItemManager {
 		this.status = status;
 	}
 
+	public boolean contains(String item) throws InitializationException, InvalidDataException {
+		return getMappedCatalog().containsKey(item);
+	}
+
 }

@@ -8,14 +8,15 @@ import logistics.exceptions.XmlReadingException;
 import logistics.facility.FacilityManager;
 import logistics.item.ItemManager;
 import logistics.network.NetworkManager;
+import logistics.order.OrderManager;
 
 public class Main {
 
 	public static void main(String[] args) {
 		NetworkManager nm = NetworkManager.getInstance();
 		ItemManager im = ItemManager.getInstance();
-
 		FacilityManager fm = FacilityManager.getInstance();
+		OrderManager om = OrderManager.getInstance();
 
 		ArrayList<String[]> samplePairs = new ArrayList<>();
 		samplePairs.add(new String[] { "Santa Fe, NM", "Chicago, IL" });
@@ -33,10 +34,14 @@ public class Main {
 			nm.init("Links.xml", 8, 50);
 			im.init("Items.xml");
 			fm.init("Facilities.xml");
+			om.init("Orders.xml");
 
-			System.out.println(outputOne(fm));
-			System.out.println(outputTwo(im));
-			System.out.println(outputThree(nm, samplePairs));
+			// System.out.println(outputOne(fm));
+			// System.out.println(outputTwo(im));
+			// System.out.println(outputThree(nm, samplePairs));
+			// System.out.println(om.getReport());
+
+			om.startProcessing();
 
 		} catch (XmlReadingException | InvalidDataException | InitializationException e) {
 			System.err.println(e.getMessage());

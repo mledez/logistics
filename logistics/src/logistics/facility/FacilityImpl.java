@@ -119,9 +119,29 @@ public class FacilityImpl implements Facility {
 		return String.format("Schedule:\n%-15s%s\n%-15s%s\n", "Day:", day, "Available:", available);
 	}
 
-	// @Override
-	// public boolean getStatus() {
-	// // TODO Auto-generated method stub
-	// return true;
-	// }
+	public boolean contains(String item) {
+		if (getInventory().containsKey(item))
+			if (getInventory().get(item) > 0)
+				return true;
+		return false;
+	}
+
+	public int getItemCount(String item) {
+		return getInventory().get(item);
+	}
+
+	public int quoteTime(int day, int qty) {
+		while (qty > 0) {
+			if (getInventory().containsKey(day)) {
+				if (getInventory().get(day) > 0) {
+					qty = qty - getInventory().get(day);
+				}
+			} else {
+				qty = qty - getDailyRate();
+			}
+			if (qty > 0)
+				day++;
+		}
+		return day;
+	}
 }

@@ -1,5 +1,6 @@
 package logistics.facility;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import logistics.exceptions.InitializationException;
@@ -60,5 +61,26 @@ public class FacilityManager {
 
 	private void setStatus(boolean status) {
 		this.status = status;
+	}
+
+	public List<String> whoHasIt(String item, String destination) {
+		List<String> hasIt = new ArrayList<>();
+		for (Facility facility : getFacilities()) {
+			if (!facility.getLocation().equals(destination) && facility.contains(item))
+				hasIt.add(facility.getLocation());
+		}
+		return hasIt;
+	}
+
+	public int getItemCount(String item, String location) {
+		return getFacility(location).getItemCount(item);
+	}
+
+	private Facility getFacility(String location) {
+		for (Facility facility : getFacilities()) {
+			if (facility.getLocation().equals(location))
+				return facility;
+		}
+		return null;
 	}
 }

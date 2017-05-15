@@ -71,7 +71,7 @@
 	<Order>
 		<Id>TO-006</Id>
 		<Day>1</Day>
-		<Destination>Denvor, CO</Destination>
+		<Destination>Denver, CO</Destination>
 		<Item>
 			<Id>CT1928</Id>
 			<Qty>120</Qty>
