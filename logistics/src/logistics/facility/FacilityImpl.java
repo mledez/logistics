@@ -130,7 +130,8 @@ public class FacilityImpl implements Facility {
 		return getInventory().get(item);
 	}
 
-	public int quoteTime(int day, int qty) {
+	public int quoteTime(String item, int day, int qty) {
+		qty = Integer.min(qty, getItemCount(item));
 		while (qty > 0) {
 			if (getInventory().containsKey(day)) {
 				if (getInventory().get(day) > 0) {

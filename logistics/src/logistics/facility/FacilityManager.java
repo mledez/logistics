@@ -83,4 +83,8 @@ public class FacilityManager {
 		}
 		return null;
 	}
+
+	public int quoteTime(String location, String item, int day, int qty) {
+		return getFacility(location).quoteTime(item, day, qty);
+	}
 }
