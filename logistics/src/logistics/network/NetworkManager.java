@@ -155,7 +155,7 @@ public class NetworkManager {
 		List<String> bestPath = getPathProcessor().findBestPath(origin, destination);
 		String firstCity = bestPath.get(0);
 		String secondCity;
-		int totalDistance = 0;
+		float totalDistance = 0;
 		for (int i = 1; i < bestPath.size(); i++) {
 			secondCity = bestPath.get(i);
 			totalDistance = totalDistance + getDistance(firstCity, secondCity);

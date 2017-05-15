@@ -73,8 +73,9 @@ public class OrderManager {
 									order.getItemQty(currentItem));
 							float travelTime = nm.getDistanceInDays(currentFacility, order.getDestination());
 							System.out.println("Facility: " + currentFacility + " Qty: " + qtyNeeded + " Travel time: "
-									+ travelTime + " Proccesing End Day: " + fm.quoteTime(currentFacility, currentItem,
-											order.getDay(), order.getItemQty(currentItem)));
+									+ (int) Math.ceil(travelTime) + " Proccesing End Day: "
+									+ fm.quoteTime(currentFacility, currentItem, order.getDay(),
+											order.getItemQty(currentItem)));
 						}
 					}
 

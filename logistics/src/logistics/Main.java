@@ -30,6 +30,8 @@ public class Main {
 		samplePairs.add(new String[] { "Los Angeles, CA", "Chicago, IL" });
 		samplePairs.add(new String[] { "Detroit, MI", "Nashville, TN" });
 
+		samplePairs.add(new String[] { "Fargo, ND", "Miami, FL" });
+
 		try {
 			nm.init("Links.xml", 8, 50);
 			im.init("Items.xml");
@@ -38,7 +40,7 @@ public class Main {
 
 			// System.out.println(outputOne(fm));
 			// System.out.println(outputTwo(im));
-			// System.out.println(outputThree(nm, samplePairs));
+			System.out.println(outputThree(nm, samplePairs));
 			// System.out.println(om.getReport());
 
 			om.startProcessing();
