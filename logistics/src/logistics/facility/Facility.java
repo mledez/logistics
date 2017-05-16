@@ -16,4 +16,8 @@ public interface Facility {
 
 	public int quoteTime(String item, int day, int qty);
 
+	public void reduceInventory(String item, int qty);
+
+	public void scheduleOrder(int day, int qty);
+
 }

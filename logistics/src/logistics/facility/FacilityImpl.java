@@ -145,4 +145,27 @@ public class FacilityImpl implements Facility {
 		}
 		return day;
 	}
+
+	public void reduceInventory(String item, int qty) {
+		getInventory().put(item, getInventory().get(item) - qty);
+	}
+
+	public void scheduleOrder(int day, int qty) {
+		while (qty > 0) {
+			if (getSchedule().containsKey(day)) {
+				if (getSchedule().get(day) > 0) {
+					int deduction = Math.min(qty, getSchedule().get(day));
+					getSchedule().put(day, getSchedule().get(day) - deduction);
+					qty = qty - deduction;
+				}
+			} else {
+				int deduction = Math.min(qty, getDailyRate());
+				getSchedule().put(day, getDailyRate() - deduction);
+				qty = qty - deduction;
+			}
+
+			if (qty > 0)
+				day++;
+		}
+	}
 }

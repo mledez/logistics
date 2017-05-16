@@ -87,4 +87,12 @@ public class FacilityManager {
 	public int quoteTime(String location, String item, int day, int qty) {
 		return getFacility(location).quoteTime(item, day, qty);
 	}
+
+	public void reduceInventory(String location, String item, int qty) {
+		getFacility(location).reduceInventory(item, qty);
+	}
+
+	public void scheduleOrder(String location, int day, int qty) {
+		getFacility(location).scheduleOrder(day, qty);
+	}
 }

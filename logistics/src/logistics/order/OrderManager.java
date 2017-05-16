@@ -1,11 +1,14 @@
 package logistics.order;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import logistics.exceptions.InitializationException;
 import logistics.exceptions.InvalidDataException;
 import logistics.exceptions.XmlReadingException;
 import logistics.facility.FacilityManager;
+import logistics.facility.FacilityRecord;
 import logistics.item.ItemManager;
 import logistics.loaders.OrderLoader;
 import logistics.network.NetworkManager;
@@ -62,21 +65,37 @@ public class OrderManager {
 			String currentItem = order.getNextItem();
 			while (currentItem != null) {
 				System.out.println("Current Item: " + currentItem);
+				int orderQty = order.getItemQty(currentItem);
 				if (im.contains(currentItem)) {
 					List<String> whoHasIt = fm.whoHasIt(currentItem, order.getDestination());
 					if (whoHasIt.isEmpty()) {
+
 						System.err.println("Generate Back-Order for item " + currentItem + " \n");
 					} else {
+						List<FacilityRecord> records = new ArrayList<>();
 						for (String currentFacility : whoHasIt) {
 							System.out.println("Current Facility " + currentFacility);
-							int qtyNeeded = Integer.min(fm.getItemCount(currentItem, currentFacility),
-									order.getItemQty(currentItem));
+							int qtyAvailable = fm.getItemCount(currentItem, currentFacility);
+							int qtyNeeded = order.getItemQty(currentItem);
+							int qtyTaken = Integer.min(qtyAvailable, qtyNeeded);
 							float travelTime = nm.getDistanceInDays(currentFacility, order.getDestination());
-							System.out.println("Facility: " + currentFacility + " Qty: " + qtyNeeded + " Travel time: "
-									+ (int) Math.ceil(travelTime) + " Proccesing End Day: "
-									+ fm.quoteTime(currentFacility, currentItem, order.getDay(),
-											order.getItemQty(currentItem)));
+							int procEndDay = fm.quoteTime(currentFacility, currentItem, order.getDay(),
+									order.getItemQty(currentItem));
+							records.add(new FacilityRecord(currentFacility, qtyAvailable, qtyTaken, procEndDay,
+									travelTime));
+
+							//
+							// System.out.println("Facility: " + currentFacility + " Qty: " + qtyNeeded + " Travel time: "
+							// + (int) Math.ceil(travelTime) + " Proccesing End Day: " + procEndDay);
 						}
+						Collections.sort(records);
+						FacilityRecord fr = records.get(0);
+						fm.reduceInventory(fr.getName(), currentItem, fr.getQtyTaken());
+						orderQty = orderQty - fr.getQtyTaken();
+						fm.scheduleOrder(fr.getName(), order.getDay(), fr.getQtyTaken());
+
+						// for (FacilityRecord fr : records)
+						// System.out.println(fr.getName());
 					}
 
 				} else {
