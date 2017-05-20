@@ -4,15 +4,16 @@ import java.util.Map;
 import java.util.TreeMap;
 
 import logistics.exceptions.InvalidDataException;
+import logistics.inventory.InventoryImpl;
 
 public class FacilityImpl implements Facility {
 	private String location;
 	private int dailyRate;
 	private int dailyCost;
-	private Map<String, Integer> inventory;
+	private InventoryImpl inventory;
 	private Map<Integer, Integer> schedule = new TreeMap<>();
 
-	public FacilityImpl(String location, int dailyRate, int dailyCost, Map<String, Integer> inventory)
+	public FacilityImpl(String location, int dailyRate, int dailyCost, InventoryImpl inventory)
 			throws InvalidDataException {
 		setLocation(location);
 		setDailyRate(dailyRate);
@@ -24,11 +25,11 @@ public class FacilityImpl implements Facility {
 		return schedule;
 	}
 
-	private Map<String, Integer> getInventory() {
+	private InventoryImpl getInventory() {
 		return inventory;
 	}
 
-	private void setInventory(Map<String, Integer> inventory) throws InvalidDataException {
+	private void setInventory(InventoryImpl inventory) throws InvalidDataException {
 		if (inventory == null)
 			throw new InvalidDataException("Facility inventory can not be null");
 		this.inventory = inventory;
@@ -80,11 +81,11 @@ public class FacilityImpl implements Facility {
 	private String getInventoryReport() {
 		String actInventory = "";
 		String depInventory = "";
-		for (String key : getInventory().keySet()) {
-			if (getInventory().get(key) == 0)
-				depInventory += key + "; ";
+		for (String id : getInventory().getIdSet()) {
+			if (getInventory().getQty(id) == 0)
+				depInventory += id + "; ";
 			else
-				actInventory += String.format("   %-11s %s\n", key, getInventory().get(key));
+				actInventory += String.format("   %-11s %s\n", id, getInventory().getQty(id));
 		}
 		if (depInventory.equals(""))
 			depInventory = "None\n";
@@ -120,34 +121,34 @@ public class FacilityImpl implements Facility {
 	}
 
 	public boolean contains(String item) {
-		if (getInventory().containsKey(item))
-			if (getInventory().get(item) > 0)
+		if (getInventory().containsId(item))
+			if (getInventory().getQty(item) > 0)
 				return true;
 		return false;
 	}
 
 	public int getItemCount(String item) {
-		return getInventory().get(item);
+		return getInventory().getQty(item);
 	}
 
 	public int quoteTime(String item, int day, int qty) {
-		qty = Integer.min(qty, getItemCount(item));
-		while (qty > 0) {
-			if (getInventory().containsKey(day)) {
-				if (getInventory().get(day) > 0) {
-					qty = qty - getInventory().get(day);
-				}
-			} else {
-				qty = qty - getDailyRate();
-			}
-			if (qty > 0)
-				day++;
-		}
+		// qty = Integer.min(qty, getItemCount(item));
+		// while (qty > 0) {
+		// if (getInventory().containsKey(day)) {
+		// if (getInventory().get(day) > 0) {
+		// qty = qty - getInventory().get(day);
+		// }
+		// } else {
+		// qty = qty - getDailyRate();
+		// }
+		// if (qty > 0)
+		// day++;
+		// }
 		return day;
 	}
 
 	public void reduceInventory(String item, int qty) {
-		getInventory().put(item, getInventory().get(item) - qty);
+		// getInventory().put(item, getInventory().get(item) - qty);
 	}
 
 	public void scheduleOrder(int day, int qty) {

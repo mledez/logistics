@@ -1,9 +1,7 @@
 package logistics.loaders;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.w3c.dom.DOMException;
 import org.w3c.dom.Document;
@@ -15,6 +13,7 @@ import logistics.exceptions.InvalidDataException;
 import logistics.exceptions.XmlReadingException;
 import logistics.facility.Facility;
 import logistics.facility.FacilityFactory;
+import logistics.inventory.InventoryImpl;
 
 public class FacilityLoader {
 
@@ -45,7 +44,7 @@ public class FacilityLoader {
 				int dailyCost = Integer.parseInt(elem.getElementsByTagName("Cost").item(0).getTextContent());
 
 				// Facility Inventory: Get all nodes named "Item" - there can be 0 or more
-				Map<String, Integer> inventory = new HashMap<>();
+				InventoryImpl inventory = new InventoryImpl();
 				NodeList items = elem.getElementsByTagName("Item");
 				for (int j = 0; j < items.getLength(); j++) {
 					if (items.item(j).getNodeType() == Node.TEXT_NODE) {
