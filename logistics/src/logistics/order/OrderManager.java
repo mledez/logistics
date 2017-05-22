@@ -69,27 +69,23 @@ public class OrderManager {
 				if (im.contains(currentItem)) {
 					List<String> whoHasIt = fm.whoHasIt(currentItem, order.getDestination());
 					if (whoHasIt.isEmpty()) {
-
 						System.err.println("Generate Back-Order for item " + currentItem + " \n");
 					} else {
 						List<FacilityRecord> records = new ArrayList<>();
 						for (String currentFacility : whoHasIt) {
-							System.out.println("Current Facility " + currentFacility);
+							// System.out.println("Current Facility " + currentFacility);
 							int qtyAvailable = fm.getItemCount(currentItem, currentFacility);
 							int qtyNeeded = order.getItemQty(currentItem);
 							int qtyTaken = Integer.min(qtyAvailable, qtyNeeded);
 							float travelTime = nm.getDistanceInDays(currentFacility, order.getDestination());
-							int procEndDay = fm.quoteTime(currentFacility, currentItem, order.getDay(),
-									order.getItemQty(currentItem));
+							int procEndDay = fm.quoteTime(currentFacility, order.getDay(), qtyTaken);
 							records.add(new FacilityRecord(currentFacility, qtyAvailable, qtyTaken, procEndDay,
 									travelTime));
-
-							//
-							// System.out.println("Facility: " + currentFacility + " Qty: " + qtyNeeded + " Travel time: "
-							// + (int) Math.ceil(travelTime) + " Proccesing End Day: " + procEndDay);
 						}
 						Collections.sort(records);
 						FacilityRecord fr = records.get(0);
+						System.out.println("Facility: " + fr.getName() + " Qty: " + fr.getQtyTaken() + " Travel time: "
+								+ (int) Math.ceil(fr.getTravelTime()) + " Proccesing End Day: " + fr.getProcEndDay());
 						fm.reduceInventory(fr.getName(), currentItem, fr.getQtyTaken());
 						orderQty = orderQty - fr.getQtyTaken();
 						fm.scheduleOrder(fr.getName(), order.getDay(), fr.getQtyTaken());

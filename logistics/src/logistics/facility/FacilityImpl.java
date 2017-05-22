@@ -1,17 +1,15 @@
 package logistics.facility;
 
-import java.util.Map;
-import java.util.TreeMap;
-
 import logistics.exceptions.InvalidDataException;
 import logistics.inventory.InventoryImpl;
+import logistics.schedule.ScheduleImpl;
 
 public class FacilityImpl implements Facility {
 	private String location;
 	private int dailyRate;
 	private int dailyCost;
 	private InventoryImpl inventory;
-	private Map<Integer, Integer> schedule = new TreeMap<>();
+	private ScheduleImpl schedule;
 
 	public FacilityImpl(String location, int dailyRate, int dailyCost, InventoryImpl inventory)
 			throws InvalidDataException {
@@ -19,9 +17,15 @@ public class FacilityImpl implements Facility {
 		setDailyRate(dailyRate);
 		setDailyCost(dailyCost);
 		setInventory(inventory);
+		setSchedule(new ScheduleImpl(dailyRate));
 	}
 
-	private Map<Integer, Integer> getSchedule() {
+	private void setSchedule(ScheduleImpl schedule) {
+		this.schedule = schedule;
+
+	}
+
+	private ScheduleImpl getSchedule() {
 		return schedule;
 	}
 
@@ -74,7 +78,7 @@ public class FacilityImpl implements Facility {
 		String report = "";
 		report = String.format("%s\n%s\nRate per Day: %d\nCost per Day: $%d\n\n%s\n%s", getLocation(),
 				new String(new char[getLocation().length()]).replace("\0", "-"), getDailyRate(), getDailyCost(),
-				getInventoryReport(), getScheduleReport());
+				getInventoryReport(), getSchedule().getReport());
 		return report;
 	}
 
@@ -100,25 +104,26 @@ public class FacilityImpl implements Facility {
 		return "Active Inventory: " + actInventory + "\nDepleted (Used-Up) Inventory: " + depInventory;
 	}
 
-	private String getScheduleReport() {
-		String day = "";
-		String available = "";
-
-		int max = getSchedule().keySet().stream().max(Integer::compareTo).orElse(0);
-
-		if (getSchedule().isEmpty() || max < 20)
-			max = 20;
-
-		for (int i = max - 19; i <= max; i++) {
-			day += String.format("%-2d ", i);
-			if (getSchedule().containsKey(i))
-				available += String.format("%-2d ", getDailyRate() - getSchedule().get(i));
-			else
-				available += String.format("%-2d ", getDailyRate());
-		}
-
-		return String.format("Schedule:\n%-15s%s\n%-15s%s\n", "Day:", day, "Available:", available);
-	}
+	// private String getScheduleReport() {
+	// // String day = "";
+	// // String available = "";
+	// //
+	// // int max = getSchedule().keySet().stream().max(Integer::compareTo).orElse(0);
+	// //
+	// // if (getSchedule().isEmpty() || max < 20)
+	// // max = 20;
+	// //
+	// // for (int i = max - 19; i <= max; i++) {
+	// // day += String.format("%-2d ", i);
+	// // if (getSchedule().containsKey(i))
+	// // available += String.format("%-2d ", getDailyRate() - getSchedule().get(i));
+	// // else
+	// // available += String.format("%-2d ", getDailyRate());
+	// // }
+	// //
+	// // return String.format("Schedule:\n%-15s%s\n%-15s%s\n", "Day:", day, "Available:", available);
+	//
+	// }
 
 	public boolean contains(String item) {
 		if (getInventory().containsId(item))
@@ -131,20 +136,24 @@ public class FacilityImpl implements Facility {
 		return getInventory().getQty(item);
 	}
 
-	public int quoteTime(String item, int day, int qty) {
-		// qty = Integer.min(qty, getItemCount(item));
-		// while (qty > 0) {
-		// if (getInventory().containsKey(day)) {
-		// if (getInventory().get(day) > 0) {
-		// qty = qty - getInventory().get(day);
-		// }
-		// } else {
-		// qty = qty - getDailyRate();
-		// }
-		// if (qty > 0)
-		// day++;
-		// }
-		return day;
+	// public int quoteTime(String item, int day, int qty) {
+	// // qty = Integer.min(qty, getItemCount(item));
+	// // while (qty > 0) {
+	// // if (getInventory().containsKey(day)) {
+	// // if (getInventory().get(day) > 0) {
+	// // qty = qty - getInventory().get(day);
+	// // }
+	// // } else {
+	// // qty = qty - getDailyRate();
+	// // }
+	// // if (qty > 0)
+	// // day++;
+	// // }
+	// return day;
+	// }
+
+	public int quoteTime(int day, int qty) {
+		return getSchedule().getEndDay(day, qty);
 	}
 
 	public void reduceInventory(String item, int qty) {
@@ -152,21 +161,22 @@ public class FacilityImpl implements Facility {
 	}
 
 	public void scheduleOrder(int day, int qty) {
-		while (qty > 0) {
-			if (getSchedule().containsKey(day)) {
-				if (getSchedule().get(day) > 0) {
-					int deduction = Math.min(qty, getSchedule().get(day));
-					getSchedule().put(day, getSchedule().get(day) - deduction);
-					qty = qty - deduction;
-				}
-			} else {
-				int deduction = Math.min(qty, getDailyRate());
-				getSchedule().put(day, getDailyRate() - deduction);
-				qty = qty - deduction;
-			}
-
-			if (qty > 0)
-				day++;
-		}
+		// while (qty > 0) {
+		// if (getSchedule().containsKey(day)) {
+		// if (getSchedule().get(day) > 0) {
+		// int deduction = Math.min(qty, getSchedule().get(day));
+		// getSchedule().put(day, getSchedule().get(day) - deduction);
+		// qty = qty - deduction;
+		// }
+		// } else {
+		// int deduction = Math.min(qty, getDailyRate());
+		// getSchedule().put(day, getDailyRate() - deduction);
+		// qty = qty - deduction;
+		// }
+		//
+		// if (qty > 0)
+		// day++;
+		// }
+		getSchedule().insertOrder(day, qty);
 	}
 }

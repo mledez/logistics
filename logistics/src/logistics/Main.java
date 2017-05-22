@@ -36,14 +36,14 @@ public class Main {
 			nm.init("Links.xml", 8, 50);
 			im.init("Items.xml");
 			fm.init("Facilities.xml");
-			// om.init("Orders.xml");
+			om.init("Orders.xml");
 
-			System.out.println(outputOne(fm));
-			System.out.println(outputTwo(im));
-			System.out.println(outputThree(nm, samplePairs));
+			// System.out.println(outputOne(fm));
+			// System.out.println(outputTwo(im));
+			// System.out.println(outputThree(nm, samplePairs));
 			// System.out.println(om.getReport());
 
-			// om.startProcessing();
+			om.startProcessing();
 
 		} catch (XmlReadingException | InvalidDataException | InitializationException e) {
 			System.err.println(e.getMessage());
