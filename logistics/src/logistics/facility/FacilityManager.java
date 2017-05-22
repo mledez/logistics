@@ -84,6 +84,10 @@ public class FacilityManager {
 		return null;
 	}
 
+	public int getDailyCost(String location) {
+		return getFacility(location).getDailyCost();
+	}
+
 	public int quoteTime(String location, int day, int qty) {
 		return getFacility(location).quoteTime(day, qty);
 	}
@@ -92,7 +96,7 @@ public class FacilityManager {
 		getFacility(location).reduceInventory(item, qty);
 	}
 
-	public void scheduleOrder(String location, int day, int qty) {
-		getFacility(location).scheduleOrder(day, qty);
+	public float bookOrder(String location, int day, int qty) {
+		return getFacility(location).bookOrder(day, qty);
 	}
 }

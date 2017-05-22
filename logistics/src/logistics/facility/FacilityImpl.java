@@ -157,10 +157,11 @@ public class FacilityImpl implements Facility {
 	}
 
 	public void reduceInventory(String item, int qty) {
-		// getInventory().put(item, getInventory().get(item) - qty);
+		getInventory().reduceQty(item, qty);
+		;
 	}
 
-	public void scheduleOrder(int day, int qty) {
+	public float bookOrder(int day, int qty) {
 		// while (qty > 0) {
 		// if (getSchedule().containsKey(day)) {
 		// if (getSchedule().get(day) > 0) {
@@ -177,6 +178,6 @@ public class FacilityImpl implements Facility {
 		// if (qty > 0)
 		// day++;
 		// }
-		getSchedule().insertOrder(day, qty);
+		return getSchedule().bookOrder(day, qty);
 	}
 }

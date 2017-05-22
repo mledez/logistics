@@ -82,12 +82,24 @@ public class ItemManager {
 		this.mappedCatalog = mappedCatalog;
 	}
 
+	private Item getItem(String id) {
+		for (Item item : getCatalog()) {
+			if (item.getId().equals(id))
+				return item;
+		}
+		return null;
+	}
+
 	private void setStatus(boolean status) {
 		this.status = status;
 	}
 
 	public boolean contains(String item) throws InitializationException, InvalidDataException {
 		return getMappedCatalog().containsKey(item);
+	}
+
+	public int getPrice(String id) {
+		return getItem(id).getPrice();
 	}
 
 }

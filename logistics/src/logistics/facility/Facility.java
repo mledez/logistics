@@ -18,6 +18,6 @@ public interface Facility {
 
 	public void reduceInventory(String item, int qty);
 
-	public void scheduleOrder(int day, int qty);
+	public float bookOrder(int day, int qty);
 
 }

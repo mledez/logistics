@@ -31,15 +31,17 @@ public class ScheduleImpl {
 				currentDay++;
 			int dayCap = getUsedDays().getOrDefault(currentDay, getDailyRate());
 			if (dayCap > 0) {
-				pendingQty = pendingQty - Integer.min(pendingQty, dayCap);
+				int deduction = Integer.min(pendingQty, dayCap);
+				pendingQty = pendingQty - deduction;
 			}
 		}
 		return currentDay;
 	}
 
-	public void insertOrder(int startDay, int qty) {
+	public float bookOrder(int startDay, int qty) {
 		int currentDay = startDay;
 		int pendingQty = qty;
+		float billableTime = 0;
 		for (int i = 0; pendingQty > 0; i++) {
 			if (i > 0)
 				currentDay++;
@@ -48,8 +50,10 @@ public class ScheduleImpl {
 				int deduction = Integer.min(pendingQty, dayCap);
 				getUsedDays().put(currentDay, dayCap - deduction);
 				pendingQty = pendingQty - deduction;
+				billableTime = billableTime + deduction;
 			}
 		}
+		return billableTime / getDailyRate();
 	}
 
 	public String getReport() {

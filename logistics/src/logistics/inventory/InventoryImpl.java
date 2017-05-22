@@ -26,4 +26,10 @@ public class InventoryImpl {
 	public boolean containsId(String id) {
 		return getShelf().containsKey(id);
 	}
+
+	public void reduceQty(String item, int qty) {
+		int currentQty = getShelf().get(item);
+		int newQty = currentQty - qty;
+		getShelf().put(item, newQty);
+	}
 }
