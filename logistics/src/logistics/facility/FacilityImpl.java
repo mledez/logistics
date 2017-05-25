@@ -104,27 +104,6 @@ public class FacilityImpl implements Facility {
 		return "Active Inventory: " + actInventory + "\nDepleted (Used-Up) Inventory: " + depInventory;
 	}
 
-	// private String getScheduleReport() {
-	// // String day = "";
-	// // String available = "";
-	// //
-	// // int max = getSchedule().keySet().stream().max(Integer::compareTo).orElse(0);
-	// //
-	// // if (getSchedule().isEmpty() || max < 20)
-	// // max = 20;
-	// //
-	// // for (int i = max - 19; i <= max; i++) {
-	// // day += String.format("%-2d ", i);
-	// // if (getSchedule().containsKey(i))
-	// // available += String.format("%-2d ", getDailyRate() - getSchedule().get(i));
-	// // else
-	// // available += String.format("%-2d ", getDailyRate());
-	// // }
-	// //
-	// // return String.format("Schedule:\n%-15s%s\n%-15s%s\n", "Day:", day, "Available:", available);
-	//
-	// }
-
 	public boolean contains(String item) {
 		if (getInventory().containsId(item))
 			if (getInventory().getQty(item) > 0)
@@ -136,22 +115,6 @@ public class FacilityImpl implements Facility {
 		return getInventory().getQty(item);
 	}
 
-	// public int quoteTime(String item, int day, int qty) {
-	// // qty = Integer.min(qty, getItemCount(item));
-	// // while (qty > 0) {
-	// // if (getInventory().containsKey(day)) {
-	// // if (getInventory().get(day) > 0) {
-	// // qty = qty - getInventory().get(day);
-	// // }
-	// // } else {
-	// // qty = qty - getDailyRate();
-	// // }
-	// // if (qty > 0)
-	// // day++;
-	// // }
-	// return day;
-	// }
-
 	public int quoteTime(int day, int qty) {
 		return getSchedule().getEndDay(day, qty);
 	}
@@ -162,22 +125,6 @@ public class FacilityImpl implements Facility {
 	}
 
 	public float bookOrder(int day, int qty) {
-		// while (qty > 0) {
-		// if (getSchedule().containsKey(day)) {
-		// if (getSchedule().get(day) > 0) {
-		// int deduction = Math.min(qty, getSchedule().get(day));
-		// getSchedule().put(day, getSchedule().get(day) - deduction);
-		// qty = qty - deduction;
-		// }
-		// } else {
-		// int deduction = Math.min(qty, getDailyRate());
-		// getSchedule().put(day, getDailyRate() - deduction);
-		// qty = qty - deduction;
-		// }
-		//
-		// if (qty > 0)
-		// day++;
-		// }
 		return getSchedule().bookOrder(day, qty);
 	}
 }

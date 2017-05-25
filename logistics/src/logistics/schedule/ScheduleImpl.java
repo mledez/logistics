@@ -59,16 +59,28 @@ public class ScheduleImpl {
 	public String getReport() {
 		String day = "";
 		String available = "";
-		int max = getUsedDays().keySet().stream().max(Integer::compareTo).orElse(0);
-		if (getUsedDays().isEmpty() || max < 20)
-			max = 20;
-		for (int i = max - 19; i <= max; i++) {
+		String report = "Schedule:\n";
+		int lineCounter = 0;
+		int maxDays = 20;
+		int max = getUsedDays().keySet().stream().max(Integer::compareTo).orElse(maxDays);
+		max = (int) (Math.ceil(max / (float) maxDays) * maxDays);
+		for (int i = 1; i <= max; i++) {
 			day += String.format("%-2d ", i);
 			if (getUsedDays().containsKey(i))
-				available += String.format("%-2d ", getDailyRate() - getUsedDays().get(i));
+				available += String.format("%-2d ", getUsedDays().get(i));
 			else
 				available += String.format("%-2d ", getDailyRate());
+			if (i % maxDays == 0) {
+				if (lineCounter == 0)
+					report = report + String.format("%-15s%s\n%-15s%s\n", "Day:", day, "Available:", available);
+				else
+					report = report + String.format("%-15s%s\n%-15s%s\n", "", day, "", available);
+
+				available = "";
+				day = "";
+				lineCounter++;
+			}
 		}
-		return String.format("Schedule:\n%-15s%s\n%-15s%s\n", "Day:", day, "Available:", available);
+		return report;
 	}
 }
