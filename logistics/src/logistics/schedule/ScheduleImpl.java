@@ -38,7 +38,7 @@ public class ScheduleImpl {
 		return currentDay;
 	}
 
-	public float bookOrder(int startDay, int qty) {
+	public void bookOrder(int startDay, int qty) {
 		int currentDay = startDay;
 		int pendingQty = qty;
 		float billableTime = 0;
@@ -53,7 +53,6 @@ public class ScheduleImpl {
 				billableTime = billableTime + deduction;
 			}
 		}
-		return billableTime / getDailyRate();
 	}
 
 	public String getReport() {

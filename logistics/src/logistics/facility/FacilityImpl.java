@@ -124,7 +124,7 @@ public class FacilityImpl implements Facility {
 		;
 	}
 
-	public float bookOrder(int day, int qty) {
-		return getSchedule().bookOrder(day, qty);
+	public void bookOrder(int day, int qty) {
+		getSchedule().bookOrder(day, qty);
 	}
 }

@@ -38,40 +38,40 @@ public class Main {
 			fm.init("Facilities.xml");
 			om.init("Orders.xml");
 
-			System.out.println(outputOne(fm));
-			System.out.println(outputTwo(im));
-			System.out.println(outputThree(nm, samplePairs));
-			System.out.println(om.getReport());
+			// System.out.print(outputOne(fm));
+			// System.out.println(outputTwo(im));
+			// System.out.println(outputThree(nm, samplePairs));
+			// System.out.println(om.getReport());
 
-			om.startProcessing();
+			om.startProcessing(500);
 
-			System.out.println(outputOne(fm));
+			// System.out.print(outputOne(fm));
 
 		} catch (XmlReadingException | InvalidDataException | InitializationException e) {
 			System.err.println(e.getMessage());
 		}
 	}
 
-	// Facility Status Output and Format
-	private static String outputOne(FacilityManager fm) throws InitializationException {
-		return fm.getReport();
-	}
-
-	// Item Catalog Content Output
-	private static String outputTwo(ItemManager im) throws InitializationException, InvalidDataException {
-		return im.getReport();
-	}
-
-	// Example Shortest Path output results
-	private static String outputThree(NetworkManager nm, ArrayList<String[]> samplePairs)
-			throws InitializationException {
-		char letter = 'a';
-		String report = "Shortest Path Tests:\n\n";
-		for (String[] pair : samplePairs) {
-			report += nm.getPathReport(pair[0], pair[1]).replaceAll("(?m)(^.*\\n)(^.*\\n)+(^.*$)",
-					letter + ") $1   •  $2   •  $3\n\n");
-			letter++;
-		}
-		return report;
-	}
+	// // Facility Status Output and Format
+	// private static String outputOne(FacilityManager fm) throws InitializationException {
+	// return fm.getReport();
+	// }
+	//
+	// // Item Catalog Content Output
+	// private static String outputTwo(ItemManager im) throws InitializationException, InvalidDataException {
+	// return im.getReport();
+	// }
+	//
+	// // Example Shortest Path output results
+	// private static String outputThree(NetworkManager nm, ArrayList<String[]> samplePairs)
+	// throws InitializationException {
+	// char letter = 'a';
+	// String report = "Shortest Path Tests:\n\n";
+	// for (String[] pair : samplePairs) {
+	// report += nm.getPathReport(pair[0], pair[1]).replaceAll("(?m)(^.*\\n)(^.*\\n)+(^.*$)",
+	// letter + ") $1 • $2 • $3\n\n");
+	// letter++;
+	// }
+	// return report;
+	// }
 }
