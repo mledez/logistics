@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 import logistics.exceptions.InitializationException;
 import logistics.exceptions.InvalidDataException;
@@ -21,6 +22,9 @@ public class OrderProcessorImpl {
 	private NetworkManager nm;
 	private OrderManager om;
 	private int dailyTravelCost = 0;
+
+	// Insertion ordered HashMap <OrderId, Solution>
+	private Map<String, Map<String, List<FacilityRecord>>> solution;
 
 	public static OrderProcessorImpl getInstance() {
 		return ourInstance;
@@ -41,21 +45,21 @@ public class OrderProcessorImpl {
 		this.dailyTravelCost = dailyTravelCost;
 	}
 
-	public int getDailyTravelCost() {
+	private int getDailyTravelCost() {
 		return dailyTravelCost;
 	}
 
 	public void startProcessing() throws InitializationException, InvalidDataException {
-		int orderCounter = 1;
+		solution = new LinkedHashMap<>();
 		for (String orderId : om.getOrderIds()) {
 			String destination = om.getOrderDestination(orderId);
 			int orderDay = om.getOrderStartDay(orderId);
-			String currentItem = om.getOrderNextItem(orderId);
-			LinkedHashMap<String, Integer> orderItems = new LinkedHashMap<>();
-			LinkedHashMap<String, List<FacilityRecord>> solution = new LinkedHashMap<>();
-			while (currentItem != null) {
+
+			// Insertion ordered HashMap <ItemId, SelectedFacilities>
+			LinkedHashMap<String, List<FacilityRecord>> orderSolution = new LinkedHashMap<>();
+
+			for (String currentItem : om.getOrderedItemList(orderId)) {
 				int orderQty = om.getOrderedItemQty(orderId, currentItem);
-				orderItems.put(currentItem, orderQty);
 				if (im.contains(currentItem)) {
 					ArrayList<FacilityRecord> itemSolution = new ArrayList<>();
 					while (orderQty > 0) {
@@ -80,62 +84,63 @@ public class OrderProcessorImpl {
 							Collections.sort(records);
 							FacilityRecord fr = records.get(0);
 							itemSolution.add(fr);
-							fm.bookOrder(fr.getName(), orderDay, fr.getQtyTaken());
-							fm.reduceInventory(fr.getName(), currentItem, fr.getQtyTaken());
+							fm.bookOrder(fr.getName(), orderDay, currentItem, fr.getQtyTaken());
 							orderQty = orderQty - fr.getQtyTaken();
 						}
-						solution.put(currentItem, itemSolution);
+						orderSolution.put(currentItem, itemSolution);
 					}
 				} else {
 					System.err.println("Item " + currentItem + " not in Catalog\n");
 				}
-				currentItem = om.getOrderNextItem(orderId);
 			}
-			System.out.println(new String(new char[82]).replace("\0", "-"));
-			System.out.println("Order #" + orderCounter + "\n" + getReport(orderId, orderItems, solution));
+			solution.put(orderId, orderSolution);
+		}
+	}
+
+	public String getReport() {
+		String report = "";
+		String line = new String(new char[82]).replace("\0", "-");
+		int orderCounter = 1;
+		for (String orderId : solution.keySet()) {
+			float totalCost = 0;
+			report += String.format("Order #%d\n  %-15s%s\n  %-15s%s\n  %-15s%s\n\n  List of Order Items: ",
+					orderCounter, "Order Id:", orderId, "Order Time: ", "Day " + om.getOrderStartDay(orderId),
+					"Destination:", om.getOrderDestination(orderId));
+			int itemCounter = 1;
+			for (String item : om.getOrderedItemList(orderId)) {
+				report += String.format("\n%8d) Item ID: %10s,      Quantity: %d", itemCounter, item,
+						om.getOrderedItemQty(orderId, item));
+				itemCounter++;
+			}
+			report += "\n\n  Processing Solution: ";
+			for (String item : solution.get(orderId).keySet()) {
+				int totalQty = 0;
+				float totalCostItem = 0;
+				report += String.format("\n\n  %s:\n  %8s%-20s%-15s%-20s%-15s", item, "", "Facility", "Quantity",
+						"Cost", "Arrival Day");
+				int facilityCounter = 1;
+				List<Integer> arrivalDays = new ArrayList<>();
+				for (FacilityRecord fr : solution.get(orderId).get(item)) {
+					int qty = fr.getQtyTaken();
+					float cost = fr.getCost();
+					int arrivalDay = fr.getArrivalDay();
+					arrivalDays.add(arrivalDay);
+					report += String.format("\n%8d) %-20s%-15s$%-,19.2f%-15s", facilityCounter, fr.getName(), qty, cost,
+							arrivalDay);
+					totalQty += qty;
+					totalCostItem += cost;
+					facilityCounter++;
+				}
+				int maxArrivalDay = Collections.max(arrivalDays);
+				int minArrivalDay = Collections.min(arrivalDays);
+				report += String.format("\n  %8s%-20s%-15d$%-,19.2f%-15s", "", "TOTAL", totalQty, totalCostItem,
+						maxArrivalDay == minArrivalDay ? "[" + maxArrivalDay + "]"
+								: "[" + minArrivalDay + " - " + maxArrivalDay + "]");
+				totalCost += totalCostItem;
+			}
+			report += String.format("\n\n  %-18s$%,.2f\n%s\n", "Total Cost:", totalCost, line);
 			orderCounter++;
 		}
-	}
-
-	private String getReport(String orderId, LinkedHashMap<String, Integer> orderItems,
-			LinkedHashMap<String, List<FacilityRecord>> solution) {
-		float totalCost = 0;
-		String report = String.format("  %-15s%s\n  %-15s%s\n  %-15s%s\n\n  List of Order Items: ", "Order Id:",
-				orderId, "Order Time: ", "Day " + om.getOrderStartDay(orderId), "Destination:",
-				om.getOrderDestination(orderId));
-		int itemCounter = 1;
-		for (String item : orderItems.keySet()) {
-			report += String.format("\n%8d) Item ID: %10s,      Quantity: %d", itemCounter, item, orderItems.get(item));
-			itemCounter++;
-		}
-		report += "\n\n  Processing Solution: ";
-		for (String item : solution.keySet()) {
-			int totalQty = 0;
-			float totalCostItem = 0;
-			report += String.format("\n\n  %s:\n  %8s%-20s%-15s%-20s%-15s", item, "", "Facility", "Quantity", "Cost",
-					"Arrival Day");
-			int facilityCounter = 1;
-			List<Integer> arrivalDays = new ArrayList<>();
-			for (FacilityRecord fr : solution.get(item)) {
-				int qty = fr.getQtyTaken();
-				float cost = fr.getCost();
-				int arrivalDay = fr.getArrivalDay();
-				arrivalDays.add(arrivalDay);
-				report += String.format("\n%8d) %-20s%-15s$%-,19.2f%-15s", facilityCounter, fr.getName(), qty, cost,
-						arrivalDay);
-				totalQty += qty;
-				totalCostItem += cost;
-				facilityCounter++;
-			}
-			int maxArrivalDay = Collections.max(arrivalDays);
-			int minArrivalDay = Collections.min(arrivalDays);
-			report += String.format("\n  %8s%-20s%-15d$%-,19.2f%-15s", "", "TOTAL", totalQty, totalCostItem,
-					maxArrivalDay == minArrivalDay ? "[" + maxArrivalDay + "]"
-							: "[" + minArrivalDay + " - " + maxArrivalDay + "]");
-			totalCost += totalCostItem;
-		}
-		report += String.format("\n\n  %-18s$%,.2f", "Total Cost:", totalCost);
 		return report;
 	}
-
 }

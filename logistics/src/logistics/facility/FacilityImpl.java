@@ -1,17 +1,18 @@
 package logistics.facility;
 
 import logistics.exceptions.InvalidDataException;
-import logistics.inventory.InventoryImpl;
+import logistics.inventory.Inventory;
+import logistics.schedule.Schedule;
 import logistics.schedule.ScheduleImpl;
 
 public class FacilityImpl implements Facility {
 	private String location;
 	private int dailyRate;
 	private int dailyCost;
-	private InventoryImpl inventory;
-	private ScheduleImpl schedule;
+	private Inventory inventory;
+	private Schedule schedule;
 
-	public FacilityImpl(String location, int dailyRate, int dailyCost, InventoryImpl inventory)
+	public FacilityImpl(String location, int dailyRate, int dailyCost, Inventory inventory)
 			throws InvalidDataException {
 		setLocation(location);
 		setDailyRate(dailyRate);
@@ -20,20 +21,20 @@ public class FacilityImpl implements Facility {
 		setSchedule(new ScheduleImpl(dailyRate));
 	}
 
-	private void setSchedule(ScheduleImpl schedule) {
+	private void setSchedule(Schedule schedule) {
 		this.schedule = schedule;
 
 	}
 
-	private ScheduleImpl getSchedule() {
+	private Schedule getSchedule() {
 		return schedule;
 	}
 
-	private InventoryImpl getInventory() {
+	private Inventory getInventory() {
 		return inventory;
 	}
 
-	private void setInventory(InventoryImpl inventory) throws InvalidDataException {
+	private void setInventory(Inventory inventory) throws InvalidDataException {
 		if (inventory == null)
 			throw new InvalidDataException("Facility inventory can not be null");
 		this.inventory = inventory;
@@ -104,7 +105,7 @@ public class FacilityImpl implements Facility {
 		return "Active Inventory: " + actInventory + "\nDepleted (Used-Up) Inventory: " + depInventory;
 	}
 
-	public boolean contains(String item) {
+	public boolean containsItem(String item) {
 		if (getInventory().containsId(item))
 			if (getInventory().getQty(item) > 0)
 				return true;
@@ -119,12 +120,8 @@ public class FacilityImpl implements Facility {
 		return getSchedule().getEndDay(day, qty);
 	}
 
-	public void reduceInventory(String item, int qty) {
-		getInventory().reduceQty(item, qty);
-		;
-	}
-
-	public void bookOrder(int day, int qty) {
+	public void bookOrder(int day, String item, int qty) {
+		getInventory().deduct(item, qty);
 		getSchedule().bookOrder(day, qty);
 	}
 }

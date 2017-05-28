@@ -38,25 +38,27 @@ public class Main {
 			fm.init("Facilities.xml");
 			om.init("Orders.xml");
 
-			// System.out.print(outputOne(fm));
+			System.out.println(new String(new char[82]).replace("\0", "-"));
+			System.out.print(outputOne(fm));
 			// System.out.println(outputTwo(im));
 			// System.out.println(outputThree(nm, samplePairs));
 			// System.out.println(om.getReport());
 
 			om.startProcessing(500);
+			System.out.print(om.getProcessingReport());
 
-			// System.out.print(outputOne(fm));
+			System.out.print(outputOne(fm));
 
 		} catch (XmlReadingException | InvalidDataException | InitializationException e) {
 			System.err.println(e.getMessage());
 		}
 	}
 
-	// // Facility Status Output and Format
-	// private static String outputOne(FacilityManager fm) throws InitializationException {
-	// return fm.getReport();
-	// }
-	//
+	// Facility Status Output and Format
+	private static String outputOne(FacilityManager fm) throws InitializationException {
+		return fm.getReport();
+	}
+
 	// // Item Catalog Content Output
 	// private static String outputTwo(ItemManager im) throws InitializationException, InvalidDataException {
 	// return im.getReport();

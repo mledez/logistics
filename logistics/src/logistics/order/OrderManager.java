@@ -68,8 +68,8 @@ public class OrderManager {
 		return getOrder(orderId).getDay();
 	}
 
-	public String getOrderNextItem(String orderId) {
-		return getOrder(orderId).getNextItem();
+	public List<String> getOrderedItemList(String orderId) {
+		return getOrder(orderId).getItemList();
 	}
 
 	public int getOrderedItemQty(String orderId, String itemId) {
@@ -88,5 +88,9 @@ public class OrderManager {
 		OrderProcessorImpl op = OrderProcessorImpl.getInstance();
 		op.init(dailyTravelCost);
 		op.startProcessing();
+	}
+
+	public String getProcessingReport() {
+		return OrderProcessorImpl.getInstance().getReport();
 	}
 }

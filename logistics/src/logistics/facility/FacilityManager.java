@@ -32,9 +32,9 @@ public class FacilityManager {
 		String neighbors = "";
 		for (Facility facility : getFacilities()) {
 			neighbors = nm.getNeighborsReport(facility.getLocation());
-			report = report + line + facility.getReport().replaceFirst("\\n\\n", "\n\n" + neighbors + "\n");
+			report = report + facility.getReport().replaceFirst("\\n\\n", "\n\n" + neighbors + "\n") + line;
 		}
-		if (report == line)
+		if (report.equals(""))
 			return "No facilities found";
 		else
 			return report;
@@ -66,7 +66,7 @@ public class FacilityManager {
 	public List<String> whoHasIt(String item, String destination) {
 		List<String> hasIt = new ArrayList<>();
 		for (Facility facility : getFacilities()) {
-			if (!facility.getLocation().equals(destination) && facility.contains(item))
+			if (!facility.getLocation().equals(destination) && facility.containsItem(item))
 				hasIt.add(facility.getLocation());
 		}
 		return hasIt;
@@ -96,11 +96,7 @@ public class FacilityManager {
 		return getFacility(location).quoteTime(day, qty);
 	}
 
-	public void reduceInventory(String location, String item, int qty) {
-		getFacility(location).reduceInventory(item, qty);
-	}
-
-	public void bookOrder(String location, int day, int qty) {
-		getFacility(location).bookOrder(day, qty);
+	public void bookOrder(String location, int day, String item, int qty) {
+		getFacility(location).bookOrder(day, item, qty);
 	}
 }

@@ -1,6 +1,7 @@
 package logistics.order;
 
-import java.util.Iterator;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 public class OrderImpl implements Order {
@@ -8,14 +9,14 @@ public class OrderImpl implements Order {
 	private int day;
 	private String destination;
 	private Map<String, Integer> items;
-	private Iterator<String> itemIterator;
+	// private Iterator<String> itemIterator;
 
 	public OrderImpl(String id, int day, String destination, Map<String, Integer> items) {
 		setId(id);
 		setDay(day);
 		setDestination(destination);
 		setItems(items);
-		setItemIterator(getItems().keySet().iterator());
+		// setItemIterator(getItems().keySet().iterator());
 	}
 
 	public String getId() {
@@ -50,19 +51,19 @@ public class OrderImpl implements Order {
 		this.items = items;
 	}
 
-	public String getNextItem() {
-		if (getItemIterator().hasNext())
-			return getItemIterator().next();
-		return null;
-	}
+	// public String getNextItem() {
+	// if (getItemIterator().hasNext())
+	// return getItemIterator().next();
+	// return null;
+	// }
 
-	private Iterator<String> getItemIterator() {
-		return itemIterator;
-	}
+	// private Iterator<String> getItemIterator() {
+	// return itemIterator;
+	// }
 
-	private void setItemIterator(Iterator<String> itemIterator) {
-		this.itemIterator = itemIterator;
-	}
+	// private void setItemIterator(Iterator<String> itemIterator) {
+	// this.itemIterator = itemIterator;
+	// }
 
 	public String toString() {
 		return String.format("Order ID: %s\nOrder Time: %d\nDestination: %s\nOrder Items:\n%s\n", getId(), getDay(),
@@ -71,6 +72,13 @@ public class OrderImpl implements Order {
 
 	public int getItemQty(String item) {
 		return getItems().get(item);
+	}
+
+	public List<String> getItemList() {
+		List<String> itemList = new ArrayList<>();
+		for (String item : getItems().keySet())
+			itemList.add(item);
+		return itemList;
 	}
 
 }

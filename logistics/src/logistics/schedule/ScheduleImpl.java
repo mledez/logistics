@@ -3,7 +3,7 @@ package logistics.schedule;
 import java.util.Map;
 import java.util.TreeMap;
 
-public class ScheduleImpl {
+public class ScheduleImpl implements Schedule {
 	private Map<Integer, Integer> usedDays = new TreeMap<>();
 	private int dailyRate;
 

@@ -4,7 +4,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
 
-public class InventoryImpl {
+public class InventoryImpl implements Inventory {
 	private Map<String, Integer> shelf = new TreeMap<>();
 
 	public void put(String item, int qty) {
@@ -27,7 +27,7 @@ public class InventoryImpl {
 		return getShelf().containsKey(id);
 	}
 
-	public void reduceQty(String item, int qty) {
+	public void deduct(String item, int qty) {
 		int currentQty = getShelf().get(item);
 		int newQty = currentQty - qty;
 		getShelf().put(item, newQty);
