@@ -16,12 +16,6 @@ public interface Facility {
 
 	public int quoteTime(int day, int qty);
 
-<<<<<<< HEAD
 	public void bookOrder(int day, String item, int qty);
-=======
-	public void reduceInventory(String item, int qty);
-
-	public void bookOrder(int day, int qty);
->>>>>>> refs/remotes/origin/master
 
 }

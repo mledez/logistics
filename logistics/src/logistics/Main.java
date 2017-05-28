@@ -38,20 +38,14 @@ public class Main {
 			fm.init("Facilities.xml");
 			om.init("Orders.xml");
 
-<<<<<<< HEAD
 			System.out.println(new String(new char[82]).replace("\0", "-"));
-=======
->>>>>>> refs/remotes/origin/master
 			System.out.print(outputOne(fm));
 			// System.out.println(outputTwo(im));
 			// System.out.println(outputThree(nm, samplePairs));
 			// System.out.println(om.getReport());
 
 			om.startProcessing(500);
-<<<<<<< HEAD
 			System.out.print(om.getProcessingReport());
-=======
->>>>>>> refs/remotes/origin/master
 
 			System.out.print(outputOne(fm));
 
