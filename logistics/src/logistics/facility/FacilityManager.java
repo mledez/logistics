@@ -27,12 +27,12 @@ public class FacilityManager {
 		if (!getStatus())
 			throw new InitializationException("Facility manager is not initialized");
 		String line = new String(new char[82]).replace("\0", "-") + "\n";
-		String report = line;
+		String report = "";
 		NetworkManager nm = NetworkManager.getInstance();
 		String neighbors = "";
 		for (Facility facility : getFacilities()) {
 			neighbors = nm.getNeighborsReport(facility.getLocation());
-			report = report + facility.getReport().replaceFirst("\\n\\n", "\n\n" + neighbors + "\n") + line;
+			report = report + line + facility.getReport().replaceFirst("\\n\\n", "\n\n" + neighbors + "\n");
 		}
 		if (report == line)
 			return "No facilities found";
@@ -88,6 +88,10 @@ public class FacilityManager {
 		return getFacility(location).getDailyCost();
 	}
 
+	public int getDailyRate(String location) {
+		return getFacility(location).getDailyRate();
+	}
+
 	public int quoteTime(String location, int day, int qty) {
 		return getFacility(location).quoteTime(day, qty);
 	}
@@ -96,7 +100,7 @@ public class FacilityManager {
 		getFacility(location).reduceInventory(item, qty);
 	}
 
-	public float bookOrder(String location, int day, int qty) {
-		return getFacility(location).bookOrder(day, qty);
+	public void bookOrder(String location, int day, int qty) {
+		getFacility(location).bookOrder(day, qty);
 	}
 }

@@ -38,14 +38,14 @@ public class Main {
 			fm.init("Facilities.xml");
 			om.init("Orders.xml");
 
-			System.out.println(outputOne(fm));
-			System.out.println(outputTwo(im));
-			System.out.println(outputThree(nm, samplePairs));
-			System.out.println(om.getReport());
+			System.out.print(outputOne(fm));
+			// System.out.println(outputTwo(im));
+			// System.out.println(outputThree(nm, samplePairs));
+			// System.out.println(om.getReport());
 
-			om.startProcessing();
+			om.startProcessing(500);
 
-			System.out.println(outputOne(fm));
+			System.out.print(outputOne(fm));
 
 		} catch (XmlReadingException | InvalidDataException | InitializationException e) {
 			System.err.println(e.getMessage());
