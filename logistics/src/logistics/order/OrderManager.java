@@ -7,7 +7,10 @@ import logistics.exceptions.InitializationException;
 import logistics.exceptions.InvalidDataException;
 import logistics.exceptions.XmlReadingException;
 import logistics.loaders.OrderLoader;
+<<<<<<< HEAD
 import logistics.order.processor.OrderProcessorImpl;
+=======
+>>>>>>> refs/remotes/origin/master
 
 public class OrderManager {
 
@@ -68,6 +71,7 @@ public class OrderManager {
 		return getOrder(orderId).getDay();
 	}
 
+<<<<<<< HEAD
 	public List<String> getOrderedItemList(String orderId) {
 		return getOrder(orderId).getItemList();
 	}
@@ -92,5 +96,27 @@ public class OrderManager {
 
 	public String getProcessingReport() {
 		return OrderProcessorImpl.getInstance().getReport();
+=======
+	public String getOrderNextItem(String orderId) {
+		return getOrder(orderId).getNextItem();
+	}
+
+	public int getOrderedItemQty(String orderId, String itemId) {
+		return getOrder(orderId).getItemQty(itemId);
+	}
+
+	private Order getOrder(String orderId) {
+		for (Order order : getOrders()) {
+			if (order.getId().equals(orderId))
+				return order;
+		}
+		return null;
+	}
+
+	public void startProcessing(int dailyTravelCost) throws InitializationException, InvalidDataException {
+		OrderProcessor op = OrderProcessor.getInstance();
+		op.init(dailyTravelCost);
+		op.startProcessing();
+>>>>>>> refs/remotes/origin/master
 	}
 }

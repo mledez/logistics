@@ -32,7 +32,7 @@ public class FacilityManager {
 		String neighbors = "";
 		for (Facility facility : getFacilities()) {
 			neighbors = nm.getNeighborsReport(facility.getLocation());
-			report = report + facility.getReport().replaceFirst("\\n\\n", "\n\n" + neighbors + "\n") + line;
+			report = report + line + facility.getReport().replaceFirst("\\n\\n", "\n\n" + neighbors + "\n");
 		}
 		if (report.equals(""))
 			return "No facilities found";
@@ -96,7 +96,16 @@ public class FacilityManager {
 		return getFacility(location).quoteTime(day, qty);
 	}
 
+<<<<<<< HEAD
 	public void bookOrder(String location, int day, String item, int qty) {
 		getFacility(location).bookOrder(day, item, qty);
+=======
+	public void reduceInventory(String location, String item, int qty) {
+		getFacility(location).reduceInventory(item, qty);
+	}
+
+	public void bookOrder(String location, int day, int qty) {
+		getFacility(location).bookOrder(day, qty);
+>>>>>>> refs/remotes/origin/master
 	}
 }

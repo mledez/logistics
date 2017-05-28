@@ -120,8 +120,17 @@ public class FacilityImpl implements Facility {
 		return getSchedule().getEndDay(day, qty);
 	}
 
+<<<<<<< HEAD
 	public void bookOrder(int day, String item, int qty) {
 		getInventory().deduct(item, qty);
+=======
+	public void reduceInventory(String item, int qty) {
+		getInventory().reduceQty(item, qty);
+		;
+	}
+
+	public void bookOrder(int day, int qty) {
+>>>>>>> refs/remotes/origin/master
 		getSchedule().bookOrder(day, qty);
 	}
 }
