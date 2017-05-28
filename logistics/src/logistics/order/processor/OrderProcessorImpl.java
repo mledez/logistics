@@ -74,18 +74,13 @@ public class OrderProcessorImpl {
 								int qtyTaken = Integer.min(qtyAvailable, orderQty);
 								float travelTime = nm.getDistanceInDays(currentFacility, destination);
 								int procEndDay = fm.quoteTime(currentFacility, orderDay, qtyTaken);
-								float procTime = (float) qtyTaken / fm.getDailyRate(currentFacility);
-								float cost = qtyTaken * im.getPrice(currentItem)
-										+ procTime * fm.getDailyCost(currentFacility)
-										+ (float) Math.ceil(travelTime) * getDailyTravelCost();
-								records.add(new FacilityRecord(currentFacility, qtyAvailable, qtyTaken, procEndDay,
-										travelTime, cost));
+								records.add(new FacilityRecord(currentFacility, qtyTaken, procEndDay, travelTime));
 							}
 							Collections.sort(records);
 							FacilityRecord fr = records.get(0);
 							itemSolution.add(fr);
-							fm.bookOrder(fr.getName(), orderDay, currentItem, fr.getQtyTaken());
-							orderQty = orderQty - fr.getQtyTaken();
+							fm.bookOrder(fr.getName(), orderDay, currentItem, fr.getNumberOfItems());
+							orderQty = orderQty - fr.getNumberOfItems();
 						}
 						orderSolution.put(currentItem, itemSolution);
 					}
@@ -121,8 +116,11 @@ public class OrderProcessorImpl {
 				int facilityCounter = 1;
 				List<Integer> arrivalDays = new ArrayList<>();
 				for (FacilityRecord fr : solution.get(orderId).get(item)) {
-					int qty = fr.getQtyTaken();
-					float cost = fr.getCost();
+					int qty = fr.getNumberOfItems();
+					float cost = fr.getNumberOfItems() * im.getPrice(item)
+							+ (float) fr.getNumberOfItems() / fm.getDailyRate(fr.getName())
+									* fm.getDailyCost(fr.getName())
+							+ (float) Math.ceil(fr.getTravelTime()) * getDailyTravelCost();
 					int arrivalDay = fr.getArrivalDay();
 					arrivalDays.add(arrivalDay);
 					report += String.format("\n%8d) %-20s%-15s$%-,19.2f%-15s", facilityCounter, fr.getName(), qty, cost,

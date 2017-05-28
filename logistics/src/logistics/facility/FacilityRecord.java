@@ -2,71 +2,51 @@ package logistics.facility;
 
 public class FacilityRecord implements Comparable<FacilityRecord> {
 	private String name;
-	private int qtyAvailable;
-	private int qtyTaken;
-	private int procEndDay;
+	private int numberOfItems;
+	private int processingEndDay;
 	private float travelTime;
-	private float cost;
 
-	public FacilityRecord(String name, int qtyAvailable, int qtyTaken, int procEndDay, float travelTime, float cost) {
+	public FacilityRecord(String name, int qtyTaken, int procEndDay, float travelTime) {
 		setName(name);
-		setQtyAvailable(qtyAvailable);
-		setQtyTaken(qtyTaken);
-		setProcEndDay(procEndDay);
+		setNumberOfItems(qtyTaken);
+		setProcessingEndDay(procEndDay);
 		setTravelTime(travelTime);
-		setCost(cost);
 	}
 
 	private void setName(String name) {
 		this.name = name;
 	}
 
-	private void setQtyAvailable(int qtyAvailable) {
-		this.qtyAvailable = qtyAvailable;
+	private void setNumberOfItems(int qtyTaken) {
+		this.numberOfItems = qtyTaken;
 	}
 
-	private void setQtyTaken(int qtyTaken) {
-		this.qtyTaken = qtyTaken;
-	}
-
-	private void setProcEndDay(int procEndDay) {
-		this.procEndDay = procEndDay;
+	private void setProcessingEndDay(int procEndDay) {
+		this.processingEndDay = procEndDay;
 	}
 
 	private void setTravelTime(float travelTime) {
 		this.travelTime = travelTime;
 	}
 
-	private void setCost(float cost) {
-		this.cost = cost;
-	}
-
 	public String getName() {
 		return name;
 	}
 
-	public int getQtyAvailable() {
-		return qtyAvailable;
+	public int getNumberOfItems() {
+		return numberOfItems;
 	}
 
-	public int getQtyTaken() {
-		return qtyTaken;
-	}
-
-	public int getProcEndDay() {
-		return procEndDay;
+	public int getProcessingEndDay() {
+		return processingEndDay;
 	}
 
 	public float getTravelTime() {
 		return travelTime;
 	}
 
-	public float getCost() {
-		return cost;
-	}
-
 	public Integer getArrivalDay() {
-		return (int) Math.ceil(getProcEndDay() + getTravelTime());
+		return (int) Math.ceil(getProcessingEndDay() + getTravelTime());
 	}
 
 	@Override
@@ -78,11 +58,12 @@ public class FacilityRecord implements Comparable<FacilityRecord> {
 			return comparison;
 	}
 
-	@Override
-	public String toString() {
-		return String.format(
-				"Name: %s, Qty Available: %d, Qty Taken: %d, Processing End Date: %d, Travel Time: %.2f, Arrival date: %d",
-				getName(), getQtyAvailable(), getQtyTaken(), getProcEndDay(), getTravelTime(), getArrivalDay());
-	}
+	// @Override
+	// public String toString() {
+	// return String.format(
+	// "Name: %s, Qty Available: %d, Qty Taken: %d, Processing End Date: %d, Travel Time: %.2f, Arrival date: %d",
+	// getName(), getQtyAvailable(), getNumberOfItems(), getProcessingEndDay(), getTravelTime(),
+	// getArrivalDay());
+	// }
 
 }
