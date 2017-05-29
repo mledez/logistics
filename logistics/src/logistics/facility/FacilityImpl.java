@@ -20,9 +20,10 @@ public class FacilityImpl implements Facility {
 		setSchedule(schedule);
 	}
 
-	private void setSchedule(Schedule schedule) {
+	private void setSchedule(Schedule schedule) throws InvalidDataException {
+		if (schedule == null)
+			throw new InvalidDataException("Facility schedule can't be null");
 		this.schedule = schedule;
-
 	}
 
 	private Schedule getSchedule() {
@@ -35,13 +36,13 @@ public class FacilityImpl implements Facility {
 
 	private void setInventory(Inventory inventory) throws InvalidDataException {
 		if (inventory == null)
-			throw new InvalidDataException("Facility inventory can not be null");
+			throw new InvalidDataException("Facility inventory can't be null");
 		this.inventory = inventory;
 	}
 
 	private void setLocation(String location) throws InvalidDataException {
 		if (location == null || location.equals(""))
-			throw new InvalidDataException("Facility location can not be null or empty");
+			throw new InvalidDataException("Facility location can't be null or empty");
 		this.location = location;
 	}
 
@@ -85,7 +86,7 @@ public class FacilityImpl implements Facility {
 	private String getInventoryReport() {
 		String actInventory = "";
 		String depInventory = "";
-		for (String id : getInventory().getIdSet()) {
+		for (String id : getInventory().getIdList()) {
 			if (getInventory().getQty(id) == 0)
 				depInventory += id + "; ";
 			else
@@ -119,7 +120,7 @@ public class FacilityImpl implements Facility {
 		return getSchedule().calculateProcessingEndDay(day, qty);
 	}
 
-	public void bookOrder(int day, String item, int qty) {
+	public void bookOrder(int day, String item, int qty) throws InvalidDataException {
 		getInventory().deduct(item, qty);
 		getSchedule().bookOrder(day, qty);
 	}

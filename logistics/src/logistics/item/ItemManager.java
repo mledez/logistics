@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
+import logistics.exceptions.DuplicatedDataException;
 import logistics.exceptions.InitializationException;
 import logistics.exceptions.InvalidDataException;
 import logistics.exceptions.XmlReadingException;
@@ -18,8 +19,7 @@ public class ItemManager {
 	private ItemManager() {}
 
 	private Map<String, Integer> getMappedCatalog() throws InitializationException, InvalidDataException {
-		if (!getStatus())
-			throw new InitializationException("Item Manager not initialized");
+		checkStatus();
 		if (this.mappedCatalog == null) {
 			TreeMap<String, Integer> mappedCatalog = new TreeMap<>();
 			for (Item item : getCatalog())
@@ -46,34 +46,34 @@ public class ItemManager {
 		this.mappedCatalog = mappedCatalog;
 	}
 
-	private Item getItem(String id) {
+	private Item getItem(String id) throws InvalidDataException {
 		for (Item item : getCatalog()) {
 			if (item.getId().equals(id))
 				return item;
 		}
-		return null;
+		throw new InvalidDataException(String.format("Item %s not found in the Item Manager", id));
 	}
 
 	private void setStatus(boolean status) {
 		this.status = status;
 	}
 
+	private void checkStatus() throws InitializationException {
+		if (!status)
+			throw new InitializationException("Item manager is not initialized");
+	}
+
 	public static ItemManager getInstance() {
 		return ourInstance;
 	}
 
-	public void init(String fileName) throws XmlReadingException, InvalidDataException {
+	public void init(String fileName) throws XmlReadingException, InvalidDataException, DuplicatedDataException {
 		setCatalog(ItemLoader.load(fileName));
 		setStatus(true);
 	}
 
-	public boolean getStatus() {
-		return this.status;
-	}
-
 	public String getReport() throws InitializationException, InvalidDataException {
-		if (!getStatus())
-			throw new InitializationException("Item Manager not initialized");
+		checkStatus();
 		int lineLimit = 86;
 		String report = "   ";
 		String newEntry;
@@ -97,7 +97,8 @@ public class ItemManager {
 		return getMappedCatalog().containsKey(item);
 	}
 
-	public int getPrice(String id) {
+	public int getPrice(String id) throws InitializationException, InvalidDataException {
+		checkStatus();
 		return getItem(id).getPrice();
 	}
 

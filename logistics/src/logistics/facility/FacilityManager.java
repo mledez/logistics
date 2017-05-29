@@ -3,6 +3,7 @@ package logistics.facility;
 import java.util.ArrayList;
 import java.util.List;
 
+import logistics.exceptions.DuplicatedDataException;
 import logistics.exceptions.InitializationException;
 import logistics.exceptions.InvalidDataException;
 import logistics.exceptions.XmlReadingException;
@@ -38,13 +39,17 @@ public class FacilityManager {
 		return null;
 	}
 
+	private void checkStatus() throws InitializationException {
+		if (!status)
+			throw new InitializationException("Facility manager is not initialized");
+	}
+
 	public static FacilityManager getInstance() {
 		return ourInstance;
 	}
 
 	public String getReport() throws InitializationException {
-		if (!getStatus())
-			throw new InitializationException("Facility manager is not initialized");
+		checkStatus();
 		String line = new String(new char[82]).replace("\0", "-") + "\n";
 		String report = "";
 		NetworkManager nm = NetworkManager.getInstance();
@@ -59,16 +64,13 @@ public class FacilityManager {
 			return report;
 	}
 
-	public boolean getStatus() {
-		return this.status;
-	}
-
-	public void init(String fileName) throws XmlReadingException, InvalidDataException {
+	public void init(String fileName) throws XmlReadingException, InvalidDataException, DuplicatedDataException {
 		setFacilities(FacilityLoader.load(fileName));
 		setStatus(true);
 	}
 
-	public List<String> whoHasIt(String item) {
+	public List<String> whoHasIt(String item) throws InitializationException {
+		checkStatus();
 		List<String> hasIt = new ArrayList<>();
 		for (Facility facility : getFacilities()) {
 			if (facility.containsItem(item))
@@ -77,23 +79,29 @@ public class FacilityManager {
 		return hasIt;
 	}
 
-	public int getItemCount(String item, String location) {
+	public int getItemCount(String item, String location) throws InitializationException {
+		checkStatus();
 		return getFacility(location).getItemCount(item);
 	}
 
-	public int getDailyCost(String location) {
+	public int getDailyCost(String location) throws InitializationException {
+		checkStatus();
 		return getFacility(location).getDailyCost();
 	}
 
-	public int getDailyRate(String location) {
+	public int getDailyRate(String location) throws InitializationException {
+		checkStatus();
 		return getFacility(location).getDailyRate();
 	}
 
-	public int calculateProcessingEndDay(String location, int day, int qty) {
+	public int calculateProcessingEndDay(String location, int day, int qty) throws InitializationException {
+		checkStatus();
 		return getFacility(location).calculateProcessingEndDay(day, qty);
 	}
 
-	public void bookOrder(String location, int day, String item, int qty) {
+	public void bookOrder(String location, int day, String item, int qty)
+			throws InitializationException, InvalidDataException {
+		checkStatus();
 		getFacility(location).bookOrder(day, item, qty);
 	}
 }

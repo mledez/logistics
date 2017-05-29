@@ -7,6 +7,12 @@ public class LinkImpl implements Link {
 	private String destination;
 	private int distance;
 
+	public LinkImpl(String origin, String destination, int distance) throws InvalidDataException {
+		setOrigin(origin);
+		setDestination(destination);
+		setDistance(distance);
+	}
+
 	private void setOrigin(String origin) throws InvalidDataException {
 		if (origin == null || origin.equals(""))
 			throw new InvalidDataException("Link origin can't be null or empty");
@@ -23,7 +29,6 @@ public class LinkImpl implements Link {
 		if (distance < 1)
 			throw new InvalidDataException("Distance between locations (links) can't be less than 1");
 		this.distance = distance;
-
 	}
 
 	public String getOrigin() {
@@ -36,11 +41,5 @@ public class LinkImpl implements Link {
 
 	public int getDistance() {
 		return this.distance;
-	}
-
-	public LinkImpl(String origin, String destination, int distance) throws InvalidDataException {
-		setOrigin(origin);
-		setDestination(destination);
-		setDistance(distance);
 	}
 }

@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
+import logistics.exceptions.DuplicatedDataException;
 import logistics.exceptions.InitializationException;
 import logistics.exceptions.InvalidDataException;
 import logistics.exceptions.XmlReadingException;
@@ -25,7 +26,7 @@ public class NetworkManager {
 
 	private NetworkManager() {}
 
-	private List<Link> getNetwork() throws InitializationException {
+	private List<Link> getNetwork() {
 		return network;
 	}
 
@@ -85,25 +86,29 @@ public class NetworkManager {
 		return getMappedNetwork().get(origin + getSeparator() + destination);
 	}
 
+	private void setStatus(boolean status) {
+		this.status = status;
+	}
+
+	private void checkStatus() throws InitializationException {
+		if (!status)
+			throw new InitializationException("Network is not initialized");
+	}
+
 	public static NetworkManager getInstance() {
 		return instance;
 	}
 
-	public void init(String fileName, int hoursDay, int milesHour) throws XmlReadingException, InvalidDataException {
+	public void init(String fileName, int hoursDay, int milesHour)
+			throws XmlReadingException, InvalidDataException, DuplicatedDataException {
 		setNetwork(NetworkLoader.load(fileName));
 		setHoursDay(hoursDay);
 		setMilesHour(milesHour);
-		this.status = true;
-	}
-
-	public boolean getStatus() {
-		return this.status;
+		setStatus(true);
 	}
 
 	public String getNeighborsReport(String location) throws InitializationException {
-		if (!getStatus())
-			throw new InitializationException("Network is not initialized");
-
+		checkStatus();
 		Map<String, Float> neighbors = new TreeMap<>();
 		Float travelTime;
 		for (Link link : getNetwork()) {
@@ -131,9 +136,7 @@ public class NetworkManager {
 	}
 
 	public String getPathReport(String origin, String destination) throws InitializationException {
-		if (!getStatus())
-			throw new InitializationException("Network is not initialized");
-
+		checkStatus();
 		List<String> bestPath = getPathProcessor().findBestPath(origin, destination);
 		String firstCity = bestPath.get(0);
 		String secondCity;
@@ -151,6 +154,7 @@ public class NetworkManager {
 	}
 
 	public float getDistanceInDays(String origin, String destination) throws InitializationException {
+		checkStatus();
 		List<String> bestPath = getPathProcessor().findBestPath(origin, destination);
 		String firstCity = bestPath.get(0);
 		String secondCity;

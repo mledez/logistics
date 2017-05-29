@@ -3,6 +3,7 @@ package logistics.order;
 import java.util.ArrayList;
 import java.util.List;
 
+import logistics.exceptions.DuplicatedDataException;
 import logistics.exceptions.InitializationException;
 import logistics.exceptions.InvalidDataException;
 import logistics.exceptions.XmlReadingException;
@@ -46,7 +47,7 @@ public class OrderManager {
 		return ourInstance;
 	}
 
-	public void init(String fileName, int dailyTravelCost) throws XmlReadingException, InvalidDataException {
+	public void init(String fileName, int dailyTravelCost) throws XmlReadingException, DuplicatedDataException {
 		setOrders(OrderLoader.load(fileName));
 		setStatus(true);
 		op = new OrderProcessorImpl(dailyTravelCost);
@@ -80,7 +81,7 @@ public class OrderManager {
 		op.processOrders();
 	}
 
-	public String getProcessingReport() {
+	public String getProcessingReport() throws InitializationException, InvalidDataException {
 		return op.getReport();
 	}
 }

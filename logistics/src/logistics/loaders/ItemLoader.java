@@ -9,6 +9,7 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
+import logistics.exceptions.DuplicatedDataException;
 import logistics.exceptions.InvalidDataException;
 import logistics.exceptions.XmlReadingException;
 import logistics.item.Item;
@@ -17,7 +18,9 @@ import logistics.item.ItemFactory;
 public class ItemLoader {
 	private ItemLoader() {}
 
-	public static List<Item> load(String fileName) throws XmlReadingException, InvalidDataException {
+	public static List<Item> load(String fileName)
+			throws XmlReadingException, InvalidDataException, DuplicatedDataException {
+		List<String> loadedIds = new ArrayList<>();
 		try {
 			Document doc = XmlDocLoader.loadDoc(fileName);
 			NodeList nodeList = doc.getDocumentElement().getChildNodes();
@@ -31,20 +34,24 @@ public class ItemLoader {
 
 				String entryName = nodeList.item(i).getNodeName();
 				if (!entryName.equals("Item")) {
-					System.err.println("Unexpected node found: " + entryName);
-					return null;
+					throw new XmlReadingException(
+							String.format("Unexpected node found (%s) in file %s", entryName, fileName));
 				}
 
 				Element elem = (Element) nodeList.item(i);
 				String id = elem.getElementsByTagName("Id").item(0).getTextContent();
+				if (loadedIds.contains(id))
+					throw new DuplicatedDataException(
+							String.format("Duplicated Item (%s) found in file %s", id, fileName));
+
 				int price = Integer.parseInt(elem.getElementsByTagName("Price").item(0).getTextContent());
 
 				items.add(ItemFactory.createItem(id, price));
+				loadedIds.add(id);
 			}
 			return items;
 		} catch (DOMException e) {
-			e.printStackTrace();
+			throw new XmlReadingException("DOM problem found operating file " + fileName);
 		}
-		return null;
 	}
 }

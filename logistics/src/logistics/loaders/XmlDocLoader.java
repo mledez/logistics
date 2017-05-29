@@ -37,7 +37,6 @@ public class XmlDocLoader {
 		} catch (IllegalArgumentException e) {
 			throw new XmlReadingException("File " + fileName + " not found");
 		}
-
 		return doc;
 	}
 

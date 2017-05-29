@@ -1,5 +1,6 @@
 package logistics;
 
+import logistics.exceptions.DuplicatedDataException;
 import logistics.exceptions.InitializationException;
 import logistics.exceptions.InvalidDataException;
 import logistics.exceptions.XmlReadingException;
@@ -9,7 +10,6 @@ import logistics.network.NetworkManager;
 import logistics.order.OrderManager;
 
 public class Main {
-
 	public static void main(String[] args) {
 		NetworkManager nm = NetworkManager.getInstance();
 		ItemManager im = ItemManager.getInstance();
@@ -29,7 +29,7 @@ public class Main {
 			System.out.print(om.getProcessingReport());
 			System.out.print(fm.getReport());
 
-		} catch (XmlReadingException | InvalidDataException | InitializationException e) {
+		} catch (XmlReadingException | InvalidDataException | InitializationException | DuplicatedDataException e) {
 			System.err.println(e.getMessage());
 		}
 	}

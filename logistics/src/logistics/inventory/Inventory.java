@@ -1,15 +1,17 @@
 package logistics.inventory;
 
-import java.util.Set;
+import java.util.List;
+
+import logistics.exceptions.InvalidDataException;
 
 public interface Inventory {
-	public void put(String item, int qty);
+	public void add(String item, int qty) throws InvalidDataException;
 
-	public Set<String> getIdSet();
+	public List<String> getIdList();
 
 	public int getQty(String id);
 
 	public boolean containsId(String id);
 
-	public void deduct(String item, int qty);
+	public void deduct(String item, int qty) throws InvalidDataException;
 }

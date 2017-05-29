@@ -7,5 +7,5 @@ public interface OrderProcessor {
 
 	public void processOrders() throws InitializationException, InvalidDataException;
 
-	public String getReport();
+	public String getReport() throws InitializationException, InvalidDataException;
 }

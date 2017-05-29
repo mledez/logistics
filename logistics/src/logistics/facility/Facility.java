@@ -1,5 +1,7 @@
 package logistics.facility;
 
+import logistics.exceptions.InvalidDataException;
+
 public interface Facility {
 
 	public String getLocation();
@@ -16,6 +18,6 @@ public interface Facility {
 
 	public int calculateProcessingEndDay(int day, int qty);
 
-	public void bookOrder(int day, String item, int qty);
+	public void bookOrder(int day, String item, int qty) throws InvalidDataException;
 
 }

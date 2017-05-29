@@ -2,6 +2,7 @@ package logistics.order.processor;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -9,7 +10,6 @@ import java.util.Map;
 import logistics.exceptions.InitializationException;
 import logistics.exceptions.InvalidDataException;
 import logistics.facility.FacilityManager;
-import logistics.facility.FacilityRecord;
 import logistics.item.ItemManager;
 import logistics.network.NetworkManager;
 import logistics.order.OrderManager;
@@ -22,6 +22,7 @@ public class OrderProcessorImpl implements OrderProcessor {
 	private OrderManager om;
 	private int dailyTravelCost = 0;
 	private Map<String, Map<String, List<FacilityRecord>>> solution;
+	private Map<String, String> comments;
 
 	public OrderProcessorImpl(int dailyTravelCost) {
 		this.im = ItemManager.getInstance();
@@ -41,13 +42,11 @@ public class OrderProcessorImpl implements OrderProcessor {
 
 	public void processOrders() throws InitializationException, InvalidDataException {
 		solution = new LinkedHashMap<>();
+		comments = new HashMap<>();
 		for (String orderId : om.getOrderIds()) {
 			String destination = om.getOrderDestination(orderId);
 			int orderDay = om.getOrderStartDay(orderId);
-
-			// Insertion ordered HashMap <ItemId, SelectedFacilities>
 			LinkedHashMap<String, List<FacilityRecord>> orderSolution = new LinkedHashMap<>();
-
 			for (String currentItem : om.getOrderedItemList(orderId)) {
 				int orderQty = om.getOrderedItemQty(orderId, currentItem);
 				if (im.contains(currentItem)) {
@@ -56,7 +55,9 @@ public class OrderProcessorImpl implements OrderProcessor {
 						List<String> whoHasIt = fm.whoHasIt(currentItem);
 						whoHasIt.remove(destination);
 						if (whoHasIt.isEmpty()) {
-							System.err.println("Generate Back-Order for item " + currentItem + " \n");
+							String comment = comments.getOrDefault(orderId, "") + String.format(
+									"  Remaining %d units of item %s were Back-Ordered.\n", orderQty, currentItem);
+							comments.put(orderId, comment);
 							orderQty = 0;
 						} else {
 							List<FacilityRecord> records = new ArrayList<>();
@@ -83,7 +84,7 @@ public class OrderProcessorImpl implements OrderProcessor {
 		}
 	}
 
-	public String getReport() {
+	public String getReport() throws InitializationException, InvalidDataException {
 		String report = "";
 		String line = new String(new char[82]).replace("\0", "-");
 		int orderCounter = 1;
@@ -127,7 +128,11 @@ public class OrderProcessorImpl implements OrderProcessor {
 								: "[" + minArrivalDay + " - " + maxArrivalDay + "]");
 				totalCost += totalCostItem;
 			}
-			report += String.format("\n\n  %-18s$%,.2f\n%s\n", "Total Cost:", totalCost, line);
+			if (comments.containsKey(orderId))
+				report += String.format("\n\n  %-18s$%,.2f\n\n  Comments:\n%s%s\n", "Total Cost:", totalCost,
+						comments.get(orderId), line);
+			else
+				report += String.format("\n\n  %-18s$%,.2f\n%s\n", "Total Cost:", totalCost, line);
 			orderCounter++;
 		}
 		return report;
