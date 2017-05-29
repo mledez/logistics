@@ -6,16 +6,20 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import logistics.exceptions.InvalidDataException;
+
 public class PathProcessorImpl implements PathProcessor {
 	private Map<String, Integer> network;;
 	private List<String> lowPath;
 	private String separator = ":::";
 
-	public PathProcessorImpl(Map<String, Integer> network) {
+	public PathProcessorImpl(Map<String, Integer> network) throws InvalidDataException {
 		setNetwork(network);
 	}
 
-	private void setNetwork(Map<String, Integer> network) {
+	private void setNetwork(Map<String, Integer> network) throws InvalidDataException {
+		if (network == null || network.isEmpty())
+			throw new InvalidDataException("Network map can't be null or empty");
 		this.network = network;
 	}
 

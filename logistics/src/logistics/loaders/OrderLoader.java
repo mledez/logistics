@@ -12,6 +12,7 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import logistics.exceptions.DuplicatedDataException;
+import logistics.exceptions.InvalidDataException;
 import logistics.exceptions.XmlReadingException;
 import logistics.order.Order;
 import logistics.order.OrderFactory;
@@ -19,7 +20,8 @@ import logistics.order.OrderFactory;
 public class OrderLoader {
 	private OrderLoader() {}
 
-	public static List<Order> load(String fileName) throws XmlReadingException, DuplicatedDataException {
+	public static List<Order> load(String fileName)
+			throws XmlReadingException, DuplicatedDataException, InvalidDataException {
 		List<String> loadedIds = new ArrayList<>();
 		try {
 			Document doc = XmlDocLoader.loadDoc(fileName);

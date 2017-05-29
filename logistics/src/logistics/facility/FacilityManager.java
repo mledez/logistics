@@ -94,7 +94,8 @@ public class FacilityManager {
 		return getFacility(location).getDailyRate();
 	}
 
-	public int calculateProcessingEndDay(String location, int day, int qty) throws InitializationException {
+	public int calculateProcessingEndDay(String location, int day, int qty)
+			throws InitializationException, InvalidDataException {
 		checkStatus();
 		return getFacility(location).calculateProcessingEndDay(day, qty);
 	}

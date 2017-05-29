@@ -16,7 +16,7 @@ public interface Facility {
 
 	public int getItemCount(String item);
 
-	public int calculateProcessingEndDay(int day, int qty);
+	public int calculateProcessingEndDay(int day, int qty) throws InvalidDataException;
 
 	public void bookOrder(int day, String item, int qty) throws InvalidDataException;
 

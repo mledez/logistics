@@ -116,7 +116,7 @@ public class FacilityImpl implements Facility {
 		return getInventory().getQty(item);
 	}
 
-	public int calculateProcessingEndDay(int day, int qty) {
+	public int calculateProcessingEndDay(int day, int qty) throws InvalidDataException {
 		return getSchedule().calculateProcessingEndDay(day, qty);
 	}
 

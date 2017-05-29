@@ -47,7 +47,8 @@ public class OrderManager {
 		return ourInstance;
 	}
 
-	public void init(String fileName, int dailyTravelCost) throws XmlReadingException, DuplicatedDataException {
+	public void init(String fileName, int dailyTravelCost)
+			throws XmlReadingException, DuplicatedDataException, InitializationException, InvalidDataException {
 		setOrders(OrderLoader.load(fileName));
 		setStatus(true);
 		op = new OrderProcessorImpl(dailyTravelCost);

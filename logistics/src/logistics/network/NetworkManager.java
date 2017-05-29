@@ -55,7 +55,7 @@ public class NetworkManager {
 		this.milesHour = milesHour;
 	}
 
-	private PathProcessor getPathProcessor() throws InitializationException {
+	private PathProcessor getPathProcessor() throws InitializationException, InvalidDataException {
 		if (this.pathProcessor == null) {
 			PathProcessor pathProcessor = PathProcessorFactory.createPathProcessor(new HashMap<>(getMappedNetwork()));
 			setPathProcessor(pathProcessor);
@@ -135,7 +135,8 @@ public class NetworkManager {
 		return "Direct Links:\n" + neighborsReport + "\n";
 	}
 
-	public String getPathReport(String origin, String destination) throws InitializationException {
+	public String getPathReport(String origin, String destination)
+			throws InitializationException, InvalidDataException {
 		checkStatus();
 		List<String> bestPath = getPathProcessor().findBestPath(origin, destination);
 		String firstCity = bestPath.get(0);
@@ -153,7 +154,8 @@ public class NetworkManager {
 				(float) totalDistance / (getHoursDay() * getMilesHour()));
 	}
 
-	public float getDistanceInDays(String origin, String destination) throws InitializationException {
+	public float getDistanceInDays(String origin, String destination)
+			throws InitializationException, InvalidDataException {
 		checkStatus();
 		List<String> bestPath = getPathProcessor().findBestPath(origin, destination);
 		String firstCity = bestPath.get(0);

@@ -3,15 +3,19 @@ package logistics.schedule;
 import java.util.Map;
 import java.util.TreeMap;
 
+import logistics.exceptions.InvalidDataException;
+
 public class ScheduleImpl implements Schedule {
 	private Map<Integer, Integer> usedDays = new TreeMap<>();
 	private int dailyRate;
 
-	public ScheduleImpl(int dailyRate) {
+	public ScheduleImpl(int dailyRate) throws InvalidDataException {
 		setDailyRate(dailyRate);
 	}
 
-	private void setDailyRate(int dailyRate) {
+	private void setDailyRate(int dailyRate) throws InvalidDataException {
+		if (dailyRate < 1)
+			throw new InvalidDataException(String.format("Facility Daily Rate can't be less than 1"));
 		this.dailyRate = dailyRate;
 	}
 
@@ -23,7 +27,10 @@ public class ScheduleImpl implements Schedule {
 		return this.dailyRate;
 	}
 
-	public int calculateProcessingEndDay(int startDay, int qty) {
+	public int calculateProcessingEndDay(int startDay, int qty) throws InvalidDataException {
+		if (startDay < 1 || qty < 1)
+			throw new InvalidDataException(
+					String.format("To calculate processing end time, Start Day and Qty can't be less than 1"));
 		int currentDay = startDay;
 		int pendingQty = qty;
 		for (int i = 0; pendingQty > 0; i++) {
@@ -38,7 +45,9 @@ public class ScheduleImpl implements Schedule {
 		return currentDay;
 	}
 
-	public void bookOrder(int startDay, int qty) {
+	public void bookOrder(int startDay, int qty) throws InvalidDataException {
+		if (startDay < 1 || qty < 1)
+			throw new InvalidDataException(String.format("To book and order, Start Day and Qty can't be less than 1"));
 		int currentDay = startDay;
 		int pendingQty = qty;
 		float billableTime = 0;

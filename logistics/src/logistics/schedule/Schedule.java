@@ -1,9 +1,11 @@
 package logistics.schedule;
 
-public interface Schedule {
-	public int calculateProcessingEndDay(int startDay, int qty);
+import logistics.exceptions.InvalidDataException;
 
-	public void bookOrder(int startDay, int qty);
+public interface Schedule {
+	public int calculateProcessingEndDay(int startDay, int qty) throws InvalidDataException;
+
+	public void bookOrder(int startDay, int qty) throws InvalidDataException;
 
 	public String getReport();
 }
