@@ -11,20 +11,11 @@ import logistics.loaders.ItemLoader;
 
 public class ItemManager {
 	private static ItemManager ourInstance = new ItemManager();
-
-	public static ItemManager getInstance() {
-		return ourInstance;
-	}
-
-	private ItemManager() {}
-
 	private List<Item> catalog;
 	private Map<String, Integer> mappedCatalog = null;
 	private boolean status = false;
 
-	public boolean getStatus() {
-		return this.status;
-	}
+	private ItemManager() {}
 
 	private Map<String, Integer> getMappedCatalog() throws InitializationException, InvalidDataException {
 		if (!getStatus())
@@ -37,33 +28,6 @@ public class ItemManager {
 			setMappedCatalog(mappedCatalog);
 		}
 		return this.mappedCatalog;
-	}
-
-	public void init(String fileName) throws XmlReadingException, InvalidDataException {
-		setCatalog(ItemLoader.load(fileName));
-		setStatus(true);
-	}
-
-	public String getReport() throws InitializationException, InvalidDataException {
-		if (!getStatus())
-			throw new InitializationException("Item Manager not initialized");
-		int lineLimit = 86;
-		String report = "   ";
-		String newEntry;
-		int lineCounter = 0;
-		for (String item : getMappedCatalog().keySet()) {
-			newEntry = String.format("%-8s: $%,-8d ", item, getMappedCatalog().get(item));
-			if ((report + newEntry).length() - lineLimit * lineCounter <= lineLimit)
-				report = report + newEntry;
-			else {
-				report = report + "\n   " + newEntry;
-				lineCounter++;
-			}
-		}
-		if (report.equals("   "))
-			return "   No items found";
-		else
-			return report + "\n";
 	}
 
 	private List<Item> getCatalog() {
@@ -92,6 +56,41 @@ public class ItemManager {
 
 	private void setStatus(boolean status) {
 		this.status = status;
+	}
+
+	public static ItemManager getInstance() {
+		return ourInstance;
+	}
+
+	public void init(String fileName) throws XmlReadingException, InvalidDataException {
+		setCatalog(ItemLoader.load(fileName));
+		setStatus(true);
+	}
+
+	public boolean getStatus() {
+		return this.status;
+	}
+
+	public String getReport() throws InitializationException, InvalidDataException {
+		if (!getStatus())
+			throw new InitializationException("Item Manager not initialized");
+		int lineLimit = 86;
+		String report = "   ";
+		String newEntry;
+		int lineCounter = 0;
+		for (String item : getMappedCatalog().keySet()) {
+			newEntry = String.format("%-8s: $%,-8d ", item, getMappedCatalog().get(item));
+			if ((report + newEntry).length() - lineLimit * lineCounter <= lineLimit)
+				report = report + newEntry;
+			else {
+				report = report + "\n   " + newEntry;
+				lineCounter++;
+			}
+		}
+		if (report.equals("   "))
+			return "   No items found";
+		else
+			return report + "\n";
 	}
 
 	public boolean contains(String item) throws InitializationException, InvalidDataException {

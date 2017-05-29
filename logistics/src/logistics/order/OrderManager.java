@@ -7,25 +7,23 @@ import logistics.exceptions.InitializationException;
 import logistics.exceptions.InvalidDataException;
 import logistics.exceptions.XmlReadingException;
 import logistics.loaders.OrderLoader;
+import logistics.order.processor.OrderProcessor;
 import logistics.order.processor.OrderProcessorImpl;
 
 public class OrderManager {
-
 	private static OrderManager ourInstance = new OrderManager();
-
-	public static OrderManager getInstance() {
-		return ourInstance;
-	}
+	private OrderProcessor op;
+	private List<Order> orders;
+	private boolean status = false;
 
 	private OrderManager() {}
 
-	private List<Order> orders;
-
-	private boolean status = false;
-
-	public void init(String fileName) throws XmlReadingException, InvalidDataException {
-		setOrders(OrderLoader.load(fileName));
-		setStatus(true);
+	private Order getOrder(String orderId) {
+		for (Order order : getOrders()) {
+			if (order.getId().equals(orderId))
+				return order;
+		}
+		return null;
 	}
 
 	private List<Order> getOrders() {
@@ -44,12 +42,14 @@ public class OrderManager {
 		this.status = status;
 	}
 
-	public String getReport() {
-		String report = "";
-		for (Order order : getOrders()) {
-			report += order.toString();
-		}
-		return report;
+	public static OrderManager getInstance() {
+		return ourInstance;
+	}
+
+	public void init(String fileName, int dailyTravelCost) throws XmlReadingException, InvalidDataException {
+		setOrders(OrderLoader.load(fileName));
+		setStatus(true);
+		op = new OrderProcessorImpl(dailyTravelCost);
 	}
 
 	public List<String> getOrderIds() {
@@ -76,21 +76,11 @@ public class OrderManager {
 		return getOrder(orderId).getItemQty(itemId);
 	}
 
-	private Order getOrder(String orderId) {
-		for (Order order : getOrders()) {
-			if (order.getId().equals(orderId))
-				return order;
-		}
-		return null;
-	}
-
-	public void startProcessing(int dailyTravelCost) throws InitializationException, InvalidDataException {
-		OrderProcessorImpl op = OrderProcessorImpl.getInstance();
-		op.init(dailyTravelCost);
-		op.startProcessing();
+	public void processOrders() throws InitializationException, InvalidDataException {
+		op.processOrders();
 	}
 
 	public String getProcessingReport() {
-		return OrderProcessorImpl.getInstance().getReport();
+		return op.getReport();
 	}
 }

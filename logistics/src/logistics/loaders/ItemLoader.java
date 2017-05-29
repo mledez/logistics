@@ -15,11 +15,9 @@ import logistics.item.Item;
 import logistics.item.ItemFactory;
 
 public class ItemLoader {
-
 	private ItemLoader() {}
 
 	public static List<Item> load(String fileName) throws XmlReadingException, InvalidDataException {
-
 		try {
 			Document doc = XmlDocLoader.loadDoc(fileName);
 			NodeList nodeList = doc.getDocumentElement().getChildNodes();
@@ -44,11 +42,9 @@ public class ItemLoader {
 				items.add(ItemFactory.createItem(id, price));
 			}
 			return items;
-
 		} catch (DOMException e) {
 			e.printStackTrace();
 		}
-
 		return null;
 	}
 }

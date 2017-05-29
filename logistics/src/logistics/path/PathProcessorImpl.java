@@ -7,7 +7,6 @@ import java.util.Map;
 import java.util.Set;
 
 public class PathProcessorImpl implements PathProcessor {
-
 	private Map<String, Integer> network;;
 	private List<String> lowPath;
 	private String separator = ":::";
@@ -18,7 +17,6 @@ public class PathProcessorImpl implements PathProcessor {
 
 	private void setNetwork(Map<String, Integer> network) {
 		this.network = network;
-
 	}
 
 	private Map<String, Integer> getNetwork() {
@@ -35,14 +33,6 @@ public class PathProcessorImpl implements PathProcessor {
 
 	private String getSeparator() {
 		return separator;
-	}
-
-	public List<String> findBestPath(String start, String end) {
-		setLowPath(new ArrayList<>());
-		List<String> pathList = new ArrayList<>();
-		pathList.add(start);
-		findPath(start, end, pathList);
-		return getLowPath();
 	}
 
 	private void findPath(String start, String end, List<String> pathList) {
@@ -77,7 +67,7 @@ public class PathProcessorImpl implements PathProcessor {
 		}
 	}
 
-	public int getTotalDistance(List<String> path) {
+	private int getTotalDistance(List<String> path) {
 		int length = 0;
 		for (int i = 0; i < path.size() - 1; i++) {
 			String pair = path.get(i) + getSeparator() + path.get(i + 1);
@@ -86,4 +76,11 @@ public class PathProcessorImpl implements PathProcessor {
 		return length;
 	}
 
+	public List<String> findBestPath(String start, String end) {
+		setLowPath(new ArrayList<>());
+		List<String> pathList = new ArrayList<>();
+		pathList.add(start);
+		findPath(start, end, pathList);
+		return getLowPath();
+	}
 }

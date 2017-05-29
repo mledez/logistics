@@ -3,7 +3,6 @@ package logistics.facility;
 import logistics.exceptions.InvalidDataException;
 import logistics.inventory.Inventory;
 import logistics.schedule.Schedule;
-import logistics.schedule.ScheduleImpl;
 
 public class FacilityImpl implements Facility {
 	private String location;
@@ -12,13 +11,13 @@ public class FacilityImpl implements Facility {
 	private Inventory inventory;
 	private Schedule schedule;
 
-	public FacilityImpl(String location, int dailyRate, int dailyCost, Inventory inventory)
+	public FacilityImpl(String location, int dailyRate, int dailyCost, Inventory inventory, Schedule schedule)
 			throws InvalidDataException {
 		setLocation(location);
 		setDailyRate(dailyRate);
 		setDailyCost(dailyCost);
 		setInventory(inventory);
-		setSchedule(new ScheduleImpl(dailyRate));
+		setSchedule(schedule);
 	}
 
 	private void setSchedule(Schedule schedule) {
@@ -116,8 +115,8 @@ public class FacilityImpl implements Facility {
 		return getInventory().getQty(item);
 	}
 
-	public int quoteTime(int day, int qty) {
-		return getSchedule().getEndDay(day, qty);
+	public int calculateProcessingEndDay(int day, int qty) {
+		return getSchedule().calculateProcessingEndDay(day, qty);
 	}
 
 	public void bookOrder(int day, String item, int qty) {

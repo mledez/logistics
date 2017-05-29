@@ -7,12 +7,12 @@ import java.util.TreeMap;
 public class InventoryImpl implements Inventory {
 	private Map<String, Integer> shelf = new TreeMap<>();
 
-	public void put(String item, int qty) {
-		getShelf().put(item, qty);
-	}
-
 	private Map<String, Integer> getShelf() {
 		return this.shelf;
+	}
+
+	public void put(String item, int qty) {
+		getShelf().put(item, qty);
 	}
 
 	public Set<String> getIdSet() {

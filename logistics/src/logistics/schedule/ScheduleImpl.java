@@ -23,7 +23,7 @@ public class ScheduleImpl implements Schedule {
 		return this.dailyRate;
 	}
 
-	public int getEndDay(int startDay, int qty) {
+	public int calculateProcessingEndDay(int startDay, int qty) {
 		int currentDay = startDay;
 		int pendingQty = qty;
 		for (int i = 0; pendingQty > 0; i++) {

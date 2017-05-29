@@ -14,7 +14,7 @@ public interface Facility {
 
 	public int getItemCount(String item);
 
-	public int quoteTime(int day, int qty);
+	public int calculateProcessingEndDay(int day, int qty);
 
 	public void bookOrder(int day, String item, int qty);
 

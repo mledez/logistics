@@ -14,30 +14,20 @@ import logistics.item.ItemManager;
 import logistics.network.NetworkManager;
 import logistics.order.OrderManager;
 
-public class OrderProcessorImpl {
+public class OrderProcessorImpl implements OrderProcessor {
 
-	private static OrderProcessorImpl ourInstance = new OrderProcessorImpl();
 	private ItemManager im;
 	private FacilityManager fm;
 	private NetworkManager nm;
 	private OrderManager om;
 	private int dailyTravelCost = 0;
-
-	// Insertion ordered HashMap <OrderId, Solution>
 	private Map<String, Map<String, List<FacilityRecord>>> solution;
 
-	public static OrderProcessorImpl getInstance() {
-		return ourInstance;
-	}
-
-	private OrderProcessorImpl() {
+	public OrderProcessorImpl(int dailyTravelCost) {
 		this.im = ItemManager.getInstance();
 		this.fm = FacilityManager.getInstance();
 		this.nm = NetworkManager.getInstance();
 		this.om = OrderManager.getInstance();
-	}
-
-	public void init(int dailyTravelCost) {
 		setDailyTravelCost(dailyTravelCost);
 	}
 
@@ -49,7 +39,7 @@ public class OrderProcessorImpl {
 		return dailyTravelCost;
 	}
 
-	public void startProcessing() throws InitializationException, InvalidDataException {
+	public void processOrders() throws InitializationException, InvalidDataException {
 		solution = new LinkedHashMap<>();
 		for (String orderId : om.getOrderIds()) {
 			String destination = om.getOrderDestination(orderId);
@@ -63,7 +53,8 @@ public class OrderProcessorImpl {
 				if (im.contains(currentItem)) {
 					ArrayList<FacilityRecord> itemSolution = new ArrayList<>();
 					while (orderQty > 0) {
-						List<String> whoHasIt = fm.whoHasIt(currentItem, destination);
+						List<String> whoHasIt = fm.whoHasIt(currentItem);
+						whoHasIt.remove(destination);
 						if (whoHasIt.isEmpty()) {
 							System.err.println("Generate Back-Order for item " + currentItem + " \n");
 							orderQty = 0;
@@ -73,7 +64,7 @@ public class OrderProcessorImpl {
 								int qtyAvailable = fm.getItemCount(currentItem, currentFacility);
 								int qtyTaken = Integer.min(qtyAvailable, orderQty);
 								float travelTime = nm.getDistanceInDays(currentFacility, destination);
-								int procEndDay = fm.quoteTime(currentFacility, orderDay, qtyTaken);
+								int procEndDay = fm.calculateProcessingEndDay(currentFacility, orderDay, qtyTaken);
 								records.add(new FacilityRecord(currentFacility, qtyTaken, procEndDay, travelTime));
 							}
 							Collections.sort(records);

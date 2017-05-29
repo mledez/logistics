@@ -13,7 +13,6 @@ import logistics.path.PathProcessor;
 import logistics.path.PathProcessorFactory;
 
 public class NetworkManager {
-
 	private List<Link> network;
 	private Map<String, Integer> mappedNetwork = null;
 	private int hoursDay = 0;
@@ -23,10 +22,6 @@ public class NetworkManager {
 	private boolean status = false;
 
 	private static NetworkManager instance = new NetworkManager();
-
-	public static NetworkManager getInstance() {
-		return instance;
-	}
 
 	private NetworkManager() {}
 
@@ -59,17 +54,6 @@ public class NetworkManager {
 		this.milesHour = milesHour;
 	}
 
-	public void init(String fileName, int hoursDay, int milesHour) throws XmlReadingException, InvalidDataException {
-		setNetwork(NetworkLoader.load(fileName));
-		setHoursDay(hoursDay);
-		setMilesHour(milesHour);
-		this.status = true;
-	}
-
-	public boolean getStatus() {
-		return this.status;
-	}
-
 	private PathProcessor getPathProcessor() throws InitializationException {
 		if (this.pathProcessor == null) {
 			PathProcessor pathProcessor = PathProcessorFactory.createPathProcessor(new HashMap<>(getMappedNetwork()));
@@ -95,6 +79,25 @@ public class NetworkManager {
 
 	private String getSeparator() {
 		return separator;
+	}
+
+	private int getDistance(String origin, String destination) throws InitializationException {
+		return getMappedNetwork().get(origin + getSeparator() + destination);
+	}
+
+	public static NetworkManager getInstance() {
+		return instance;
+	}
+
+	public void init(String fileName, int hoursDay, int milesHour) throws XmlReadingException, InvalidDataException {
+		setNetwork(NetworkLoader.load(fileName));
+		setHoursDay(hoursDay);
+		setMilesHour(milesHour);
+		this.status = true;
+	}
+
+	public boolean getStatus() {
+		return this.status;
 	}
 
 	public String getNeighborsReport(String location) throws InitializationException {
@@ -145,10 +148,6 @@ public class NetworkManager {
 		return String.format("%s to %s:\n%s = %,d mi\n%,d mi / (%d hours per day * %d mph) = %.2f days", origin,
 				destination, sequence, totalDistance, totalDistance, getHoursDay(), getMilesHour(),
 				(float) totalDistance / (getHoursDay() * getMilesHour()));
-	}
-
-	private int getDistance(String origin, String destination) throws InitializationException {
-		return getMappedNetwork().get(origin + getSeparator() + destination);
 	}
 
 	public float getDistanceInDays(String origin, String destination) throws InitializationException {

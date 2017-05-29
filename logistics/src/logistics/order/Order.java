@@ -3,8 +3,6 @@ package logistics.order;
 import java.util.List;
 
 public interface Order {
-	// public String getNextItem();
-
 	public String getDestination();
 
 	public int getItemQty(String item);

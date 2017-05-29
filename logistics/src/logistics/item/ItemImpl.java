@@ -3,9 +3,13 @@ package logistics.item;
 import logistics.exceptions.InvalidDataException;
 
 public class ItemImpl implements Item {
-
 	private String id;
 	private int price;
+
+	public ItemImpl(String id, int price) throws InvalidDataException {
+		setId(id);
+		setPrice(price);
+	}
 
 	private void setId(String id) throws InvalidDataException {
 		if (id == null || id.equals(""))
@@ -21,11 +25,6 @@ public class ItemImpl implements Item {
 
 	public String getId() {
 		return this.id;
-	}
-
-	public ItemImpl(String id, int price) throws InvalidDataException {
-		setId(id);
-		setPrice(price);
 	}
 
 	public int getPrice() {

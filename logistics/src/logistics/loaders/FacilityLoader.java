@@ -15,13 +15,12 @@ import logistics.facility.Facility;
 import logistics.facility.FacilityFactory;
 import logistics.inventory.Inventory;
 import logistics.inventory.InventoryImpl;
+import logistics.schedule.ScheduleImpl;
 
 public class FacilityLoader {
-
 	private FacilityLoader() {}
 
 	public static List<Facility> load(String fileName) throws XmlReadingException, InvalidDataException {
-
 		try {
 			Document doc = XmlDocLoader.loadDoc(fileName);
 			NodeList nodeList = doc.getDocumentElement().getChildNodes();
@@ -65,14 +64,13 @@ public class FacilityLoader {
 					inventory.put(itemId, itemQty);
 				}
 
-				facilities.add(FacilityFactory.createFacility(location, dailyRate, dailyCost, inventory));
+				facilities.add(FacilityFactory.createFacility(location, dailyRate, dailyCost, inventory,
+						new ScheduleImpl(dailyRate)));
 			}
 			return facilities;
-
 		} catch (DOMException e) {
 			e.printStackTrace();
 		}
-
 		return null;
 	}
 }

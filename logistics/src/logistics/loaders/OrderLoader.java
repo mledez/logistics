@@ -17,11 +17,9 @@ import logistics.order.Order;
 import logistics.order.OrderFactory;
 
 public class OrderLoader {
-
 	private OrderLoader() {}
 
 	public static List<Order> load(String fileName) throws XmlReadingException, InvalidDataException {
-
 		try {
 			Document doc = XmlDocLoader.loadDoc(fileName);
 			NodeList nodeList = doc.getDocumentElement().getChildNodes();
@@ -68,11 +66,9 @@ public class OrderLoader {
 				orders.add(OrderFactory.createOrder(id, day, destination, orderItems));
 			}
 			return orders;
-
 		} catch (DOMException e) {
 			e.printStackTrace();
 		}
-
 		return null;
 	}
 }

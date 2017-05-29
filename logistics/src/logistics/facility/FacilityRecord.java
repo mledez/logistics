@@ -57,13 +57,4 @@ public class FacilityRecord implements Comparable<FacilityRecord> {
 		else
 			return comparison;
 	}
-
-	// @Override
-	// public String toString() {
-	// return String.format(
-	// "Name: %s, Qty Available: %d, Qty Taken: %d, Processing End Date: %d, Travel Time: %.2f, Arrival date: %d",
-	// getName(), getQtyAvailable(), getNumberOfItems(), getProcessingEndDay(), getTravelTime(),
-	// getArrivalDay());
-	// }
-
 }

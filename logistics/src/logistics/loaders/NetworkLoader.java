@@ -15,11 +15,9 @@ import logistics.network.Link;
 import logistics.network.LinkFactory;
 
 public class NetworkLoader {
-
 	private NetworkLoader() {}
 
 	public static List<Link> load(String fileName) throws XmlReadingException, InvalidDataException {
-
 		try {
 			Document doc = XmlDocLoader.loadDoc(fileName);
 			NodeList nodeList = doc.getDocumentElement().getChildNodes();
@@ -45,7 +43,6 @@ public class NetworkLoader {
 				links.add(LinkFactory.createLink(linkFrom, linkTo, linkDistance));
 			}
 			return links;
-
 		} catch (DOMException e) {
 			throw new XmlReadingException("DOM problem found operating file " + fileName);
 		}
