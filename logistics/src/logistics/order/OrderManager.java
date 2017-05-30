@@ -31,8 +31,9 @@ public class OrderManager {
 		return orders;
 	}
 
-	private boolean isStatus() {
-		return status;
+	private void checkStatus() throws InitializationException {
+		if (!status)
+			throw new InitializationException("Order Manager is not initialized");
 	}
 
 	private void setOrders(List<Order> orders) {
@@ -43,6 +44,14 @@ public class OrderManager {
 		this.status = status;
 	}
 
+	private OrderProcessor getOp() {
+		return op;
+	}
+
+	private void setOp(OrderProcessor op) {
+		this.op = op;
+	}
+
 	public static OrderManager getInstance() {
 		return ourInstance;
 	}
@@ -51,10 +60,11 @@ public class OrderManager {
 			throws XmlReadingException, DuplicatedDataException, InitializationException, InvalidDataException {
 		setOrders(OrderLoader.load(fileName));
 		setStatus(true);
-		op = new OrderProcessorImpl(dailyTravelCost);
+		setOp(new OrderProcessorImpl(dailyTravelCost));
 	}
 
-	public List<String> getOrderIds() {
+	public List<String> getOrderIds() throws InitializationException {
+		checkStatus();
 		ArrayList<String> orderIds = new ArrayList<>();
 		for (Order order : getOrders()) {
 			orderIds.add(order.getId());
@@ -62,27 +72,33 @@ public class OrderManager {
 		return orderIds;
 	}
 
-	public String getOrderDestination(String orderId) {
+	public String getOrderDestination(String orderId) throws InitializationException {
+		checkStatus();
 		return getOrder(orderId).getDestination();
 	}
 
-	public int getOrderStartDay(String orderId) {
+	public int getOrderStartDay(String orderId) throws InitializationException {
+		checkStatus();
 		return getOrder(orderId).getDay();
 	}
 
-	public List<String> getOrderedItemList(String orderId) {
+	public List<String> getOrderedItemList(String orderId) throws InitializationException {
+		checkStatus();
 		return getOrder(orderId).getItemList();
 	}
 
-	public int getOrderedItemQty(String orderId, String itemId) {
+	public int getOrderedItemQty(String orderId, String itemId) throws InitializationException {
+		checkStatus();
 		return getOrder(orderId).getItemQty(itemId);
 	}
 
 	public void processOrders() throws InitializationException, InvalidDataException {
-		op.processOrders();
+		checkStatus();
+		getOp().processOrders();
 	}
 
 	public String getProcessingReport() throws InitializationException, InvalidDataException {
-		return op.getReport();
+		checkStatus();
+		return getOp().getReport();
 	}
 }

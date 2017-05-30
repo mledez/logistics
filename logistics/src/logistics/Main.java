@@ -1,5 +1,6 @@
 package logistics;
 
+import logistics.exceptions.ClassInstantiationException;
 import logistics.exceptions.DuplicatedDataException;
 import logistics.exceptions.InitializationException;
 import logistics.exceptions.InvalidDataException;
@@ -29,8 +30,10 @@ public class Main {
 			System.out.print(om.getProcessingReport());
 			System.out.print(fm.getReport());
 
-		} catch (XmlReadingException | InvalidDataException | InitializationException | DuplicatedDataException e) {
+		} catch (XmlReadingException | InvalidDataException | InitializationException | DuplicatedDataException
+				| ClassInstantiationException e) {
 			System.err.println(e.getMessage());
 		}
 	}
+
 }

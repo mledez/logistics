@@ -9,20 +9,21 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
+import logistics.exceptions.ClassInstantiationException;
 import logistics.exceptions.DuplicatedDataException;
 import logistics.exceptions.InvalidDataException;
 import logistics.exceptions.XmlReadingException;
 import logistics.facility.Facility;
 import logistics.facility.FacilityFactory;
 import logistics.inventory.Inventory;
-import logistics.inventory.InventoryImpl;
-import logistics.schedule.ScheduleImpl;
+import logistics.inventory.InventoryFactory;
+import logistics.schedule.ScheduleFactory;
 
 public class FacilityLoader {
 	private FacilityLoader() {}
 
 	public static List<Facility> load(String fileName)
-			throws XmlReadingException, InvalidDataException, DuplicatedDataException {
+			throws XmlReadingException, InvalidDataException, DuplicatedDataException, ClassInstantiationException {
 		List<String> loadedFacilities = new ArrayList<>();
 		try {
 			Document doc = XmlDocLoader.loadDoc(fileName);
@@ -48,7 +49,7 @@ public class FacilityLoader {
 				int dailyCost = Integer.parseInt(elem.getElementsByTagName("Cost").item(0).getTextContent());
 
 				// Facility Inventory: Get all nodes named "Item" - there can be 0 or more
-				Inventory inventory = new InventoryImpl();
+				Inventory inventory = InventoryFactory.createInventory("logistics.inventory.InventoryImpl");
 				NodeList items = elem.getElementsByTagName("Item");
 				List<String> loadedItems = new ArrayList<>();
 				for (int j = 0; j < items.getLength(); j++) {
@@ -72,7 +73,7 @@ public class FacilityLoader {
 				}
 
 				facilities.add(FacilityFactory.createFacility(location, dailyRate, dailyCost, inventory,
-						new ScheduleImpl(dailyRate)));
+						ScheduleFactory.createSchedule(dailyRate)));
 				loadedFacilities.add(location);
 			}
 			return facilities;

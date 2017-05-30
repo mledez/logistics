@@ -3,6 +3,7 @@ package logistics.facility;
 import java.util.ArrayList;
 import java.util.List;
 
+import logistics.exceptions.ClassInstantiationException;
 import logistics.exceptions.DuplicatedDataException;
 import logistics.exceptions.InitializationException;
 import logistics.exceptions.InvalidDataException;
@@ -64,7 +65,8 @@ public class FacilityManager {
 			return report;
 	}
 
-	public void init(String fileName) throws XmlReadingException, InvalidDataException, DuplicatedDataException {
+	public void init(String fileName)
+			throws XmlReadingException, InvalidDataException, DuplicatedDataException, ClassInstantiationException {
 		setFacilities(FacilityLoader.load(fileName));
 		setStatus(true);
 	}

@@ -10,6 +10,8 @@ import logistics.exceptions.InvalidDataException;
 public class InventoryImpl implements Inventory {
 	private Map<String, Integer> shelf = new TreeMap<>();
 
+	public InventoryImpl() {}
+
 	private Map<String, Integer> getShelf() {
 		return this.shelf;
 	}
